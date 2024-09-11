@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - HealthInsurance</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/HealthInsurance.styles.css" asp-append-version="true" />
+    <link href="~/tailwindcss/tailwind.css" rel="stylesheet" />
+    <link href="~/tailwindcss/tailwind.min.css" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Baskervville+SC&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+</head>
+<body class="bg-gray-50 text-gray-900" style="font-family: " Raleway", sans-serif">
+    <header>
+        <nav class="bg-white border-b border-gray-200 shadow-md">
+            <div class="container mx-auto flex justify-between items-center p-4">
+                <a class="text-2xl font-bold text-blue-600 hover:text-blue-800" asp-area="" asp-controller="Home" asp-action="Index">HealthInsurance</a>
+                <button class="lg:hidden text-gray-500" type="button" id="menu-toggle">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
+                </button>
+                <div id="menu" class="hidden lg:flex space-x-4">
+                    <a class="text-gray-700 hover:text-blue-600" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                    <a class="text-gray-700 hover:text-blue-600" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                    <a class="text-gray-700 hover:text-blue-600" href="/admin/login">Admin Login</a>
+                    <a class="text-gray-700 hover:text-blue-600" href="/employee/login">Employee Login</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main class="container mx-auto p-4">
+        @RenderBody()
+    </main>
+    <footer class="bg-white border-t border-gray-200 py-4 text-center text-gray-600">
+        <div class="container mx-auto">
+            &copy; 2024 - HealthInsurance - <a href="/privacy" class="text-blue-600 hover:text-blue-800">Privacy</a>
+        </div>
+    </footer>
+    <script>
+        document.getElementById('menu-toggle').addEventListener('click', function () {
+            document.getElementById('menu').classList.toggle('hidden');
+        });
+    </script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
