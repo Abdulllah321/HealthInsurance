@@ -17,8 +17,5 @@ namespace HealthInsurance.Entities
         public string Phone { get; set; }
 
         public string CompanyURL { get; set; }
-
-        // Navigation property (optional)
-         public ICollection<Policy> Policy { get; set; }
     }
 }

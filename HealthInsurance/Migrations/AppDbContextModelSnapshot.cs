@@ -163,8 +163,9 @@ namespace HealthInsurance.Migrations
 
             modelBuilder.Entity("HealthInsurance.Entities.HospitalInfo", b =>
                 {
-                    b.Property<string>("HospitalId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("HospitalId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("HospitalName")
                         .IsRequired()
@@ -208,9 +209,8 @@ namespace HealthInsurance.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("MedicalId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("MedicalId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("PolicyDescription")
                         .IsRequired()
@@ -232,13 +232,13 @@ namespace HealthInsurance.Migrations
             modelBuilder.Entity("HealthInsurance.Entities.Policy", b =>
                 {
                     b.HasOne("HealthInsurance.Entities.CompanyDetails", "CompanyDetails")
-                        .WithMany("Policy")
+                        .WithMany()
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("HealthInsurance.Entities.HospitalInfo", "HospitalInfo")
-                        .WithMany("Policy")
+                        .WithMany()
                         .HasForeignKey("MedicalId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -246,16 +246,6 @@ namespace HealthInsurance.Migrations
                     b.Navigation("CompanyDetails");
 
                     b.Navigation("HospitalInfo");
-                });
-
-            modelBuilder.Entity("HealthInsurance.Entities.CompanyDetails", b =>
-                {
-                    b.Navigation("Policy");
-                });
-
-            modelBuilder.Entity("HealthInsurance.Entities.HospitalInfo", b =>
-                {
-                    b.Navigation("Policy");
                 });
 #pragma warning restore 612, 618
         }

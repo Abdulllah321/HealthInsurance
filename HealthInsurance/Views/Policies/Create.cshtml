@@ -11,7 +11,28 @@
 
 <div class="max-w-lg mx-auto bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
     <form asp-action="Create" class="space-y-4">
-        <div asp-validation-summary="ModelOnly" class="text-red-500"></div>
+        <div asp-validation-summary="ModelOnly" class="text-red-500 mb-4"></div>
+        @if (ViewData.ModelState.ContainsKey("DebugInfo"))
+        {
+            <div class="alert alert-info">
+                <strong>Debug Information:</strong>
+                <ul>
+                    @foreach (var error in ViewData.ModelState["DebugInfo"].Errors)
+                    {
+                        <li>@error.ErrorMessage</li>
+                    }
+                </ul>
+            </div>
+        }
+
+        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+        {
+            <div class="alert alert-danger">
+                @error.ErrorMessage
+            </div>
+        }
+
+
 
         <div class="form-group">
             <label asp-for="PolicyName" class="block text-gray-700 dark:text-gray-200 mb-2 font-medium"></label>

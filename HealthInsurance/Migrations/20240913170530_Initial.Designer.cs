@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HealthInsurance.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240912115939_CompanyDetails")]
-    partial class CompanyDetails
+    [Migration("20240913170530_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -162,6 +162,93 @@ namespace HealthInsurance.Migrations
                     b.HasKey("EmpNo");
 
                     b.ToTable("EmpRegisteration");
+                });
+
+            modelBuilder.Entity("HealthInsurance.Entities.HospitalInfo", b =>
+                {
+                    b.Property<Guid>("HospitalId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("HospitalName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("PhoneNo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("HospitalId");
+
+                    b.ToTable("HospitalInfo");
+                });
+
+            modelBuilder.Entity("HealthInsurance.Entities.Policy", b =>
+                {
+                    b.Property<int>("PolicyId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PolicyId"));
+
+                    b.Property<string>("Amount")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Emi")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("MedicalId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("PolicyDescription")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PolicyName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("PolicyId");
+
+                    b.HasIndex("CompanyId");
+
+                    b.HasIndex("MedicalId");
+
+                    b.ToTable("Policies");
+                });
+
+            modelBuilder.Entity("HealthInsurance.Entities.Policy", b =>
+                {
+                    b.HasOne("HealthInsurance.Entities.CompanyDetails", "CompanyDetails")
+                        .WithMany()
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HealthInsurance.Entities.HospitalInfo", "HospitalInfo")
+                        .WithMany()
+                        .HasForeignKey("MedicalId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CompanyDetails");
+
+                    b.Navigation("HospitalInfo");
                 });
 #pragma warning restore 612, 618
         }

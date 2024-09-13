@@ -6,7 +6,7 @@ namespace HealthInsurance.Entities
     {
         [Key]
         [Required]
-        public string HospitalId { get; set; } = Guid.NewGuid().ToString();
+        public Guid HospitalId { get; set; } = Guid.NewGuid();
 
         [Required(ErrorMessage = "Hospital name is required.")]
         [StringLength(100, ErrorMessage = "Hospital name cannot be longer than 100 characters.")]
@@ -22,8 +22,5 @@ namespace HealthInsurance.Entities
 
         [Url(ErrorMessage = "Invalid URL format.")]
         public string Url { get; set; }
-
-        // Navigation property (optional)
-         public ICollection<Policy> Policy { get; set; }
     }
 }

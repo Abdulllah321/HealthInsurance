@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HealthInsurance.Entities;
+using System.ComponentModel.Design;
 
 namespace HealthInsurance.Controllers
 {
@@ -13,10 +14,11 @@ namespace HealthInsurance.Controllers
     {
         private readonly AppDbContext _context;
         private const int PageSize = 10; // Set the default page size
-
-        public PoliciesController(AppDbContext context)
+        private readonly ILogger<PoliciesController> _logger;
+        public PoliciesController(AppDbContext context, ILogger<PoliciesController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // GET: /admin/Policies
@@ -105,21 +107,48 @@ namespace HealthInsurance.Controllers
             return View();
         }
 
-        // POST: /admin/Policies/Create
+
         [HttpPost("Create")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("PolicyId,PolicyName,PolicyDescription,Amount,Emi,CompanyId,MedicalId")] Policy policy)
         {
-            if (ModelState.IsValid)
+            // Fetch the related CompanyDetails and HospitalInfo based on the provided IDs
+            var companyDetails = await _context.CompanyDetails.FindAsync(policy.CompanyId);
+            var hospitalInfo = await _context.HospitalInfo.FindAsync(policy.MedicalId);
+            Console.WriteLine("policy");
+            // Check if the fetched entities are null and add appropriate validation errors
+            if (companyDetails == null)
             {
-                _context.Add(policy);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                ModelState.AddModelError("CompanyId", $"Invalid Company ID: {policy.CompanyId}. No matching company details found.");
             }
-            ViewData["CompanyId"] = new SelectList(_context.CompanyDetails, "CompanyId", "CompanyName", policy.CompanyId);
-            ViewData["MedicalId"] = new SelectList(_context.HospitalInfo, "HospitalId", "HospitalName", policy.MedicalId);
-            return View(policy);
+            if (hospitalInfo == null)
+            {
+                ModelState.AddModelError("MedicalId", $"Invalid Medical ID: {policy.MedicalId}. No matching hospital info found.");
+            }
+
+            // If there are any validation errors, redisplay the form with errors
+            if (!ModelState.IsValid)
+            {
+                ViewData["CompanyId"] = new SelectList(_context.CompanyDetails, "CompanyId", "CompanyName", policy.CompanyId);
+                ViewData["MedicalId"] = new SelectList(_context.HospitalInfo, "HospitalId", "HospitalName", policy.MedicalId);
+
+                // Add detailed debug information to ModelState
+                ModelState.AddModelError("DebugInfo", $"Policy Data: PolicyId={policy.PolicyId}, PolicyName={policy.PolicyName}, PolicyDescription={policy.PolicyDescription}, Amount={policy.Amount}, Emi={policy.Emi}");
+
+                return View(policy);
+            }
+
+            // Assign the fetched entities to the policy's navigation properties if they are not null
+            policy.CompanyDetails = companyDetails; // This is optional, depending on how you use it later
+            policy.HospitalInfo = hospitalInfo; // This is optional, depending on how you use it later
+
+            // Add and save the policy
+            _context.Add(policy);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
+
+
 
         // GET: /admin/Policies/Edit/5
         [HttpGet("Edit/{id}")]

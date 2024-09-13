@@ -19,6 +19,14 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.AccessDeniedPath = "/Error/AccessDenied"; // Path for access denied errors
     });
 
+
+builder.Services.AddLogging(logging =>
+{
+    logging.ClearProviders();
+    logging.AddConsole(); // Enable console logging
+});
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline
@@ -28,6 +36,7 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
+
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
@@ -40,16 +49,31 @@ app.UseAuthorization();
 // Custom middleware to handle unauthorized access to /admin
 app.Use(async (context, next) =>
 {
-    if (context.Request.Path.StartsWithSegments("/admin") &&
-        !context.User.Identity.IsAuthenticated)
+    var path = context.Request.Path;
+
+    // Check if the request is under the /admin path and the user is not authenticated
+    if (path.StartsWithSegments("/admin") && !context.User.Identity.IsAuthenticated)
     {
-        // Set status code to 404 for unauthorized access to /admin
-        context.Response.StatusCode = StatusCodes.Status404NotFound;
-        await context.Response.WriteAsync("404 Not Found");
-        return;
+        // Allow access to /admin/login and /admin/register even if the user is not authenticated
+        if (path.Equals("/admin/login") || path.Equals("/admin/register"))
+        {
+            await next(); // Continue to the next middleware
+        }
+        else
+        {
+            // Set status code to 404 for unauthorized access to other /admin URLs
+            context.Response.StatusCode = StatusCodes.Status404NotFound;
+            await context.Response.WriteAsync("404 Not Found");
+            return;
+        }
     }
-    await next();
+    else
+    {
+        // Continue processing for non-admin paths or authenticated users
+        await next();
+    }
 });
+
 
 app.Use(async (context, next) =>
 {

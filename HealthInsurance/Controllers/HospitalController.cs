@@ -93,13 +93,18 @@ namespace HealthInsurance.Controllers
         [HttpGet("Details/{id}")]
         public async Task<IActionResult> Details(string id)
         {
-            if (id == null)
+            if (string.IsNullOrEmpty(id))
             {
                 return NotFound();
             }
 
+            if (!Guid.TryParse(id, out Guid hospitalId))
+            {
+                return BadRequest("Invalid Hospital ID format.");
+            }
+
             var hospitalInfo = await _context.HospitalInfo
-                .FirstOrDefaultAsync(m => m.HospitalId == id);
+                .FirstOrDefaultAsync(m => m.HospitalId == hospitalId);
             if (hospitalInfo == null)
             {
                 return NotFound();
@@ -107,6 +112,7 @@ namespace HealthInsurance.Controllers
 
             return View(hospitalInfo);
         }
+
 
         // GET: admin/hospital/Create
         [HttpGet("Create")]
@@ -118,8 +124,9 @@ namespace HealthInsurance.Controllers
         // POST: admin/hospital/Create
         [HttpPost("Create")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("HospitalId,HospitalName,PhoneNo,Location,Url")] HospitalInfo hospitalInfo)
+        public async Task<IActionResult> Create([Bind("HospitalName,PhoneNo,Location,Url")] HospitalInfo hospitalInfo)
         {
+            // HospitalId should be set automatically by the entity class
             if (ModelState.IsValid)
             {
                 _context.Add(hospitalInfo);
@@ -133,12 +140,17 @@ namespace HealthInsurance.Controllers
         [HttpGet("Edit/{id}")]
         public async Task<IActionResult> Edit(string id)
         {
-            if (id == null)
+            if (string.IsNullOrEmpty(id))
             {
                 return NotFound();
             }
 
-            var hospitalInfo = await _context.HospitalInfo.FindAsync(id);
+            if (!Guid.TryParse(id, out Guid hospitalId))
+            {
+                return BadRequest("Invalid Hospital ID format.");
+            }
+
+            var hospitalInfo = await _context.HospitalInfo.FindAsync(hospitalId);
             if (hospitalInfo == null)
             {
                 return NotFound();
@@ -146,12 +158,18 @@ namespace HealthInsurance.Controllers
             return View(hospitalInfo);
         }
 
+
         // POST: admin/hospital/Edit/5
         [HttpPost("Edit/{id}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, [Bind("HospitalId,HospitalName,PhoneNo,Location,Url")] HospitalInfo hospitalInfo)
         {
-            if (id != hospitalInfo.HospitalId)
+            if (!Guid.TryParse(id, out Guid hospitalId))
+            {
+                return BadRequest("Invalid Hospital ID format.");
+            }
+
+            if (hospitalId != hospitalInfo.HospitalId)
             {
                 return NotFound();
             }
@@ -179,17 +197,23 @@ namespace HealthInsurance.Controllers
             return View(hospitalInfo);
         }
 
+
         // GET: admin/hospital/Delete/5
         [HttpGet("Delete/{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            if (id == null)
+            if (string.IsNullOrEmpty(id))
             {
                 return NotFound();
             }
 
+            if (!Guid.TryParse(id, out Guid hospitalId))
+            {
+                return BadRequest("Invalid Hospital ID format.");
+            }
+
             var hospitalInfo = await _context.HospitalInfo
-                .FirstOrDefaultAsync(m => m.HospitalId == id);
+                .FirstOrDefaultAsync(m => m.HospitalId == hospitalId);
             if (hospitalInfo == null)
             {
                 return NotFound();
@@ -198,24 +222,30 @@ namespace HealthInsurance.Controllers
             return View(hospitalInfo);
         }
 
-        // POST: admin/hospital/Delete/5
         [HttpPost("Delete/{id}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var hospitalInfo = await _context.HospitalInfo.FindAsync(id);
+            if (!Guid.TryParse(id, out Guid hospitalId))
+            {
+                return BadRequest("Invalid Hospital ID format.");
+            }
+
+            var hospitalInfo = await _context.HospitalInfo.FindAsync(hospitalId);
             if (hospitalInfo != null)
             {
                 _context.HospitalInfo.Remove(hospitalInfo);
+                await _context.SaveChangesAsync();
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool HospitalInfoExists(string id)
+
+        private bool HospitalInfoExists(Guid id)
         {
             return _context.HospitalInfo.Any(e => e.HospitalId == id);
         }
+
     }
 }

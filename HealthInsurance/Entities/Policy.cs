@@ -1,5 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HealthInsurance.Entities
 {
@@ -19,18 +20,17 @@ namespace HealthInsurance.Entities
         [Required]
         public string Emi { get; set; }
 
-        // Foreign key to CompanyDetails
-        [Required] // Add this attribute to ensure validation
-        [ForeignKey("CompanyDetails")]
+        [Required]
         public int CompanyId { get; set; }
 
-        public CompanyDetails CompanyDetails { get; set; }
+        [ForeignKey("CompanyId")]
+        public virtual CompanyDetails CompanyDetails { get; set; }
 
-        // Foreign key to HospitalInfo
-        [Required] // Add this attribute to ensure validation
-        [ForeignKey("HospitalInfo")]
-        public string MedicalId { get; set; }
+        [Required]
+        public Guid MedicalId { get; set; }
 
-        public HospitalInfo HospitalInfo { get; set; }
+        [ForeignKey("MedicalId")]
+        public virtual HospitalInfo HospitalInfo { get; set; }
     }
+
 }

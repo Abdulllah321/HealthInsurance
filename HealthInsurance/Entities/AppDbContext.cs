@@ -20,30 +20,29 @@ namespace HealthInsurance.Entities
         {
             base.OnModelCreating(modelBuilder);
 
-            // Configuration for AdminAccount Role
+            // Configure relationships
+            modelBuilder.Entity<Policy>()
+                .HasOne(p => p.CompanyDetails)
+                .WithMany()
+                .HasForeignKey(p => p.CompanyId)
+                .OnDelete(DeleteBehavior.Restrict); // Adjust delete behavior as needed
+
+            modelBuilder.Entity<Policy>()
+                .HasOne(p => p.HospitalInfo)
+                .WithMany()
+                .HasForeignKey(p => p.MedicalId)
+                .OnDelete(DeleteBehavior.Restrict); // Adjust delete behavior as needed
+
+            // Additional configurations
             modelBuilder.Entity<AdminAccount>()
                 .Property(a => a.Role)
                 .HasConversion<string>()
                 .HasMaxLength(20);
 
-            // Configuration for EmpRegister Salary
             modelBuilder.Entity<EmpRegister>()
                 .Property(e => e.Salary)
                 .HasColumnType("decimal(18, 2)");
-
-            // Foreign Key Relationship for Policy and CompanyDetails
-            modelBuilder.Entity<Policy>()
-                .HasOne(p => p.CompanyDetails)
-                .WithMany(c => c.Policy)
-                .HasForeignKey(p => p.CompanyId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            // Foreign Key Relationship for Policy and HospitalInfo
-            modelBuilder.Entity<Policy>()
-                .HasOne(p => p.HospitalInfo)
-                .WithMany(h => h.Policy)
-                .HasForeignKey(p => p.MedicalId)
-                .OnDelete(DeleteBehavior.Cascade);
         }
+
     }
 }
