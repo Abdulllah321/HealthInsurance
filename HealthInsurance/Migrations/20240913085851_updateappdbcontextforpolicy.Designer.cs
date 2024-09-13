@@ -4,6 +4,7 @@ using HealthInsurance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HealthInsurance.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240913085851_updateappdbcontextforpolicy")]
+    partial class updateappdbcontextforpolicy
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -163,7 +166,7 @@ namespace HealthInsurance.Migrations
 
             modelBuilder.Entity("HealthInsurance.Entities.HospitalInfo", b =>
                 {
-                    b.Property<string>("HospitalId")
+                    b.Property<string>("MedicalId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("HospitalName")
@@ -184,7 +187,7 @@ namespace HealthInsurance.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("HospitalId");
+                    b.HasKey("MedicalId");
 
                     b.ToTable("HospitalInfo");
                 });

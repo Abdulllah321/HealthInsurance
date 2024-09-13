@@ -1,0 +1,70 @@
+﻿@model HealthInsurance.Entities.Policy
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1 class="text-2xl font-bold mb-4">Create Policy</h1>
+
+<h4 class="text-xl font-semibold mb-2">Policy Information</h4>
+<hr class="mb-6 border-gray-300" />
+
+<div class="max-w-lg mx-auto bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+    <form asp-action="Create" class="space-y-4">
+        <div asp-validation-summary="ModelOnly" class="text-red-500"></div>
+
+        <div class="form-group">
+            <label asp-for="PolicyName" class="block text-gray-700 dark:text-gray-200 mb-2 font-medium"></label>
+            <input asp-for="PolicyName" class="dark:bg-white/5 block w-full border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-blue-500 focus:ring-opacity-50 pl-3 py-2 text-gray-700 dark:text-gray-300" />
+            <span asp-validation-for="PolicyName" class="text-red-500 text-sm"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="PolicyDescription" class="block text-gray-700 dark:text-gray-200 mb-2 font-medium"></label>
+            <input asp-for="PolicyDescription" class="dark:bg-white/5 block w-full border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-blue-500 focus:ring-opacity-50 pl-3 py-2 text-gray-700 dark:text-gray-300" />
+            <span asp-validation-for="PolicyDescription" class="text-red-500 text-sm"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Amount" class="block text-gray-700 dark:text-gray-200 mb-2 font-medium"></label>
+            <input asp-for="Amount" class="dark:bg-white/5 block w-full border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-blue-500 focus:ring-opacity-50 pl-3 py-2 text-gray-700 dark:text-gray-300" />
+            <span asp-validation-for="Amount" class="text-red-500 text-sm"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Emi" class="block text-gray-700 dark:text-gray-200 mb-2 font-medium"></label>
+            <input asp-for="Emi" class="dark:bg-white/5 block w-full border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-blue-500 focus:ring-opacity-50 pl-3 py-2 text-gray-700 dark:text-gray-300" />
+            <span asp-validation-for="Emi" class="text-red-500 text-sm"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="CompanyId" class="block text-gray-700 dark:text-gray-200 mb-2 font-medium"></label>
+            <select asp-for="CompanyId" class="dark:bg-white/5 block w-full border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-blue-500 focus:ring-opacity-50 pl-3 py-2 text-gray-700 dark:text-gray-300" asp-items="ViewBag.CompanyId">
+                <option value="">-- Select a Company --</option>
+                @* Other options will be populated dynamically *@
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="MedicalId" class="block text-gray-700 dark:text-gray-200 mb-2 font-medium"></label>
+            <select asp-for="MedicalId" class="dark:bg-white/5 block w-full border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-blue-500 focus:ring-opacity-50 pl-3 py-2 text-gray-700 dark:text-gray-300" asp-items="ViewBag.MedicalId">
+                <option value="">-- Select a Hospital --</option>
+                @* Other options will be populated dynamically *@
+            </select>
+        </div>
+
+        <div class="form-group">
+            <input type="submit" value="Create" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md w-full transition duration-200" />
+        </div>
+    </form>
+</div>
+
+<div class="mt-4">
+    <a asp-action="Index" class="text-blue-500 hover:underline">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

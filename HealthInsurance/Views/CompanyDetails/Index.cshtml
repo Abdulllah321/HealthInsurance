@@ -1,0 +1,79 @@
+﻿@model HealthInsurance.Entities.CompanyListViewModel
+
+@{
+    ViewData["Title"] = "Company";
+}
+
+<h1 class="text-3xl font-semibold mb-6">Company Details</h1>
+
+<div class="flex justify-between mb-4">
+    <form method="get" class="flex space-x-4">
+        <input type="text" name="searchString" value="@Model.SearchString" placeholder="Search..." class="px-4 py-2 border border-gray-300 rounded-lg dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200" />
+        <button type="submit" class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-lg shadow-md">Search</button>
+    </form>
+    <a href="@Url.Action("Create")" class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-lg shadow-md">Create New</a>
+</div>
+
+<div class="overflow-hidden shadow-lg rounded-lg">
+    <table class="min-w-full leading-normal text-left table-auto">
+        <thead class="bg-gray-100 dark:bg-gray-800">
+            <tr>
+                <th class="px-5 py-3 border-b border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-200 text-sm font-semibold uppercase tracking-wider">
+                    Company Name
+                </th>
+                <th class="px-5 py-3 border-b border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-200 text-sm font-semibold uppercase tracking-wider">
+                    Address
+                </th>
+                <th class="px-5 py-3 border-b border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-200 text-sm font-semibold uppercase tracking-wider">
+                    Phone
+                </th>
+                <th class="px-5 py-3 border-b border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-200 text-sm font-semibold uppercase tracking-wider">
+                    Company URL
+                </th>
+                <th class="px-5 py-3 border-b border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-200 text-sm font-semibold uppercase tracking-wider">
+                    Actions
+                </th>
+            </tr>
+        </thead>
+        <tbody class="bg-white dark:bg-gray-900">
+            @foreach (var item in Model.Companies)
+            {
+                <tr>
+                    <td class="px-5 py-5 border-b border-gray-200 dark:border-gray-700">
+                        <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">@item.CompanyName</p>
+                    </td>
+                    <td class="px-5 py-5 border-b border-gray-200 dark:border-gray-700">
+                        <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">@item.Address</p>
+                    </td>
+                    <td class="px-5 py-5 border-b border-gray-200 dark:border-gray-700">
+                        <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">@item.Phone</p>
+                    </td>
+                    <td class="px-5 py-5 border-b border-gray-200 dark:border-gray-700">
+                        <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">@item.CompanyURL</p>
+                    </td>
+                    <td class="px-5 py-5 border-b border-gray-200 dark:border-gray-700 text-right text-sm">
+                        <a href="@Url.Action("Edit", new { id = item.CompanyId })" class="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-500">Edit</a> |
+                        <a href="@Url.Action("Details", new { id = item.CompanyId })" class="text-green-600 dark:text-green-400 hover:text-green-900 dark:hover:text-green-500">Details</a> |
+                        <a href="@Url.Action("Delete", new { id = item.CompanyId })" class="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-500">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="flex justify-between items-center mt-4">
+    <div>
+        <span class="text-gray-700 dark:text-gray-300">Page @Model.CurrentPage of @Model.TotalPages</span>
+    </div>
+    <div class="flex space-x-2">
+        @if (Model.CurrentPage > 1)
+        {
+            <a href="?searchString=@Model.SearchString&page=@(Model.CurrentPage - 1)" class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-lg shadow-md">Previous</a>
+        }
+        @if (Model.CurrentPage < Model.TotalPages)
+        {
+            <a href="?searchString=@Model.SearchString&page=@(Model.CurrentPage + 1)" class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-lg shadow-md">Next</a>
+        }
+    </div>
+</div>

@@ -4,6 +4,7 @@ using HealthInsurance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HealthInsurance.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240913080640_UpdatePolicyModel")]
+    partial class UpdatePolicyModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -232,13 +235,13 @@ namespace HealthInsurance.Migrations
             modelBuilder.Entity("HealthInsurance.Entities.Policy", b =>
                 {
                     b.HasOne("HealthInsurance.Entities.CompanyDetails", "CompanyDetails")
-                        .WithMany("Policy")
+                        .WithMany()
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("HealthInsurance.Entities.HospitalInfo", "HospitalInfo")
-                        .WithMany("Policy")
+                        .WithMany()
                         .HasForeignKey("MedicalId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -246,16 +249,6 @@ namespace HealthInsurance.Migrations
                     b.Navigation("CompanyDetails");
 
                     b.Navigation("HospitalInfo");
-                });
-
-            modelBuilder.Entity("HealthInsurance.Entities.CompanyDetails", b =>
-                {
-                    b.Navigation("Policy");
-                });
-
-            modelBuilder.Entity("HealthInsurance.Entities.HospitalInfo", b =>
-                {
-                    b.Navigation("Policy");
                 });
 #pragma warning restore 612, 618
         }

@@ -4,6 +4,7 @@ using HealthInsurance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HealthInsurance.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240912185648_HospitalInfo")]
+    partial class HospitalInfo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -187,75 +190,6 @@ namespace HealthInsurance.Migrations
                     b.HasKey("HospitalId");
 
                     b.ToTable("HospitalInfo");
-                });
-
-            modelBuilder.Entity("HealthInsurance.Entities.Policy", b =>
-                {
-                    b.Property<int>("PolicyId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PolicyId"));
-
-                    b.Property<string>("Amount")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("CompanyId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Emi")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MedicalId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("PolicyDescription")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PolicyName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("PolicyId");
-
-                    b.HasIndex("CompanyId");
-
-                    b.HasIndex("MedicalId");
-
-                    b.ToTable("Policies");
-                });
-
-            modelBuilder.Entity("HealthInsurance.Entities.Policy", b =>
-                {
-                    b.HasOne("HealthInsurance.Entities.CompanyDetails", "CompanyDetails")
-                        .WithMany("Policy")
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("HealthInsurance.Entities.HospitalInfo", "HospitalInfo")
-                        .WithMany("Policy")
-                        .HasForeignKey("MedicalId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CompanyDetails");
-
-                    b.Navigation("HospitalInfo");
-                });
-
-            modelBuilder.Entity("HealthInsurance.Entities.CompanyDetails", b =>
-                {
-                    b.Navigation("Policy");
-                });
-
-            modelBuilder.Entity("HealthInsurance.Entities.HospitalInfo", b =>
-                {
-                    b.Navigation("Policy");
                 });
 #pragma warning restore 612, 618
         }

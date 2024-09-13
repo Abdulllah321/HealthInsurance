@@ -4,7 +4,7 @@
   "libraries": [
     {
       "library": "tailwindcss@2.2.19",
-      "destination": "wwwroot/tailwindcss/"
+      "destination": "wwwroot/lib/tailwindcss/"
     }
   ]
 }

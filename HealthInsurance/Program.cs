@@ -51,6 +51,17 @@ app.Use(async (context, next) =>
     await next();
 });
 
+app.Use(async (context, next) =>
+{
+    await next();
+
+    if (context.Response.StatusCode == StatusCodes.Status404NotFound)
+    {
+        context.Request.Path = "/Error/NotFound"; // Path to the NotFound action or view
+        await next(); 
+    }
+});
+
 // Configure routes
 app.MapControllerRoute(
     name: "adminRegister",

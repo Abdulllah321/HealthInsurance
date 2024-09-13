@@ -1,0 +1,71 @@
+﻿@model HealthInsurance.Entities.Policy
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<div class="max-w-md mx-auto p-4 pt-6 md:p-6 md:pt-0">
+
+    <h1 class="text-3xl font-bold mb-4">Edit Policy</h1>
+
+    <hr class="mb-4" />
+
+    <form asp-action="Edit">
+
+        <div asp-validation-summary="ModelOnly" class="text-red-500 text-sm mb-4"></div>
+
+        <input type="hidden" asp-for="PolicyId" />
+
+        <div class="mb-4">
+            <label asp-for="PolicyName" class="block text-sm font-bold mb-2"></label>
+            <input asp-for="PolicyName" class="w-full pl-10 text-sm text-gray-700" />
+            <span asp-validation-for="PolicyName" class="text-red-500 text-sm"></span>
+        </div>
+
+        <div class="mb-4">
+            <label asp-for="PolicyDescription" class="block text-sm font-bold mb-2"></label>
+            <input asp-for="PolicyDescription" class="w-full pl-10 text-sm text-gray-700" />
+            <span asp-validation-for="PolicyDescription" class="text-red-500 text-sm"></span>
+        </div>
+
+        <div class="mb-4">
+            <label asp-for="Amount" class="block text-sm font-bold mb-2"></label>
+            <input asp-for="Amount" class="w-full pl-10 text-sm text-gray-700" />
+            <span asp-validation-for="Amount" class="text-red-500 text-sm"></span>
+        </div>
+
+        <div class="mb-4">
+            <label asp-for="Emi" class="block text-sm font-bold mb-2"></label>
+            <input asp-for="Emi" class="w-full pl-10 text-sm text-gray-700" />
+            <span asp-validation-for="Emi" class="text-red-500 text-sm"></span>
+        </div>
+
+        <div class="mb-4">
+            <label asp-for="CompanyId" class="block text-sm font-bold mb-2"></label>
+            <select asp-for="CompanyId" class="w-full pl-10 text-sm text-gray-700" asp-items="ViewBag.CompanyId"></select>
+            <span asp-validation-for="CompanyId" class="text-red-500 text-sm"></span>
+        </div>
+
+        <div class="mb-4">
+            <label asp-for="MedicalId" class="block text-sm font-bold mb-2"></label>
+            <select asp-for="MedicalId" class="w-full pl-10 text-sm text-gray-700" asp-items="ViewBag.MedicalId"></select>
+            <span asp-validation-for="MedicalId" class="text-red-500 text-sm"></span>
+        </div>
+
+        <div class="flex justify-end">
+            <input type="submit" value="Save" class="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded" />
+        </div>
+
+    </form>
+
+</div>
+
+<div class="mt-4">
+    <a asp-action="Index" class="text-blue-500 hover:text-blue-700">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

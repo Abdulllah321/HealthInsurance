@@ -1,0 +1,51 @@
+﻿@model HealthInsurance.Entities.Policy
+
+@{
+    ViewData["Title"] = "Policy Details";
+}
+
+<div class="container mx-auto p-4 md:p-6 lg:p-8 dark:bg-gray-900">
+    <h1 class="text-3xl font-bold mb-4 text-gray-900 dark:text-white">Policy Details</h1>
+
+    <div class="bg-white dark:bg-gray-800 shadow-md rounded-md p-4 md:p-6 lg:p-8">
+        <h4 class="text-xl font-medium mb-2">Policy Information</h4>
+        <hr class="my-4">
+
+        <dl class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2">
+            <div>
+                <dt class="text-sm font-medium text-gray-600 dark:text-gray-400">Policy Name</dt>
+                <dd class="text-lg font-normal text-gray-900 dark:text-white">@Html.DisplayFor(model => model.PolicyName)</dd>
+            </div>
+
+            <div>
+                <dt class="text-sm font-medium text-gray-600 dark:text-gray-400">Policy Description</dt>
+                <dd class="text-lg font-normal text-gray-900 dark:text-white">@Html.DisplayFor(model => model.PolicyDescription)</dd>
+            </div>
+
+            <div>
+                <dt class="text-sm font-medium text-gray-600 dark:text-gray-400">Amount</dt>
+                <dd class="text-lg font-normal text-gray-900 dark:text-white">@Html.DisplayFor(model => model.Amount)</dd>
+            </div>
+
+            <div>
+                <dt class="text-sm font-medium text-gray-600 dark:text-gray-400">EMI</dt>
+                <dd class="text-lg font-normal text-gray-900 dark:text-white">@Html.DisplayFor(model => model.Emi)</dd>
+            </div>
+
+            <div>
+                <dt class="text-sm font-medium text-gray-600 dark:text-gray-400">Company Details</dt>
+                <dd class="text-lg font-normal text-gray-900 dark:text-white">@Html.DisplayFor(model => model.CompanyDetails.Address)</dd>
+            </div>
+
+            <div>
+                <dt class="text-sm font-medium text-gray-600 dark:text-gray-400">Hospital Info</dt>
+                <dd class="text-lg font-normal text-gray-900 dark:text-white">@Html.DisplayFor(model => model.HospitalInfo.HospitalId)</dd>
+            </div>
+        </dl>
+
+        <div class="mt-6 flex justify-end">
+            <a asp-action="Edit" asp-route-id="@Model?.PolicyId" class="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded mr-2">Edit</a>
+            <a asp-action="Index" class="text-blue-600 hover:text-blue-800 font-medium">Back to List</a>
+        </div>
+    </div>
+</div>
