@@ -1,17 +1,11 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using HealthInsurance.Entities;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
-namespace HealthInsurance.Entities
+namespace HealthInsurance.Models
 {
-    public class Policy
+    public class PolicyDto
     {
-        // Constructor to initialize the collection
-        public Policy()
-        {
-            PoliciesOnEmployees = new List<PoliciesOnEmployees>();
-        }
-
         [Key]
         public int PolicyId { get; set; }
 
@@ -31,13 +25,13 @@ namespace HealthInsurance.Entities
         public int CompanyId { get; set; }
 
         // Navigation property for the company
-        [ForeignKey(nameof(CompanyId))]
-        public CompanyDetails Company { get; set; }
+        //[ForeignKey(nameof(CompanyId))]
+        //public CompanyDetails Company { get; set; }
 
         [StringLength(50)]
         public string Medicaid { get; set; }
 
         // Navigation property for policies on employees
-        public ICollection<PoliciesOnEmployees> PoliciesOnEmployees { get; set; }
+        //public ICollection<PoliciesOnEmployees> PoliciesOnEmployees { get; set; }
     }
 }

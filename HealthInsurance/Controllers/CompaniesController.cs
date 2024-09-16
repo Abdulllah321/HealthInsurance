@@ -158,19 +158,37 @@ namespace HealthInsurance.Controllers
         }
 
         // POST: admin/companies/delete/5
+        // POST: admin/companies/delete/5
         [HttpPost("delete/{id}"), ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var companyDetails = await _context.Companies.FindAsync(id);
-            if (companyDetails != null)
+            if (companyDetails == null)
             {
-                _context.Companies.Remove(companyDetails);
+                return NotFound();
             }
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                _context.Companies.Remove(companyDetails);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            catch (DbUpdateException ex)
+            {
+                // Check if the exception is due to a foreign key constraint violation
+                if (ex.InnerException != null && ex.InnerException.Message.Contains("REFERENCE constraint"))
+                {
+                    ModelState.AddModelError("", "Unable to delete. This company is referenced by existing policies.");
+                    return View("Delete", companyDetails); // Return to the Delete view with an error message
+                }
+
+                // If it's a different issue, rethrow the exception
+                throw;
+            }
         }
+
 
         private bool CompanyDetailsExists(int id)
         {
