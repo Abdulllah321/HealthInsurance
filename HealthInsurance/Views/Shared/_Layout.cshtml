@@ -33,7 +33,9 @@
     </script>
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-200 transition-colors duration-300" style="font-family: 'Raleway', sans-serif;">
-
+    <div id="loading-overlay" class="fixed inset-0 bg-white dark:bg-gray-800 bg-opacity-75 dark:bg-opacity-75 flex items-center justify-center z-50 hidden">
+        <div class="w-16 h-16 border-4 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
+    </div>
 @if (Context.User.Identity.Name != null)
 {
     <nav class="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
@@ -86,36 +88,38 @@
                     @if (User.IsInRole("Admin"))
                     {
                         <li>
-                            <a href="/admin" class="flex items-center p-3 text-gray-600 dark:text-gray-400 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group transition-colors duration-300">
-                                <svg class="mr-2 w-6 h-6 text-gray-600 dark:text-gray-400 transition duration-75 group-hover:text-gray-900 dark:group-hover:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 21">
-                                    <path d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z" />
-                                    <path d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z" />
-                                </svg>
-                                <span class="ms-3 text-lg font-semibold text-gray-600 dark:text-gray-400">Dashboard</span>
+                           
+                            <a href="/admin" class="flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group transition-colors duration-300
+    @(ViewContext.RouteData.Values["controller"].ToString() == "Admin" ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:!text-white" : "text-gray-600 dark:!text-gray-100")">
+                                <i class="fas fa-tachometer-alt mr-2 transition duration-75 group-hover:text-gray-900 dark:group-hover:text-gray-200 text-gray-500 dark:text-gray-400"></i>
+                                <span class="ms-3 text-lg font-semibold">Dashboard</span>
+                            </a>
+                        </li>
+                        <li> 
+                            <a href="/admin/companies" class="flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group transition-colors duration-300
+    @(ViewContext.RouteData.Values["controller"].ToString() == "Companies" ? "bg-gray-100 dark:bg-gray-700 text-white dark:!text-white" : "text-gray-600 dark:!text-gray-100")">
+                                <i class="fas fa-building mr-2 transition duration-75 group-hover:text-gray-900 dark:group-hover:text-gray-200 text-gray-500 dark:text-gray-400"></i>
+                                <span class="ms-3 text-lg font-semibold">Company</span>
                             </a>
                         </li>
                         <li>
-                            <a href="/admin/companies" class="flex items-center p-3 text-gray-600 dark:text-gray-400 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group transition-colors duration-300">
-                                <i class="fa-solid fa-building mr-2 w-6 h-6 text-gray-600 dark:text-gray-400 transition duration-75 group-hover:text-gray-900 dark:group-hover:text-gray-200"></i>
-                                <span class="ms-3 text-lg font-semibold text-gray-600 dark:text-gray-400">Company</span>
+                            <a href="/admin/hospital" class="flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group transition-colors duration-300
+    @(ViewContext.RouteData.Values["controller"].ToString() == "Hospital" ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:!text-white" : "text-gray-600 dark:!text-gray-100")">
+                                <i class="fas fa-hospital mr-2 transition duration-75 group-hover:text-gray-900 dark:group-hover:text-gray-200 text-gray-500 dark:text-gray-400"></i>
+                                <span class="ms-3 text-lg font-semibold">Hospital</span>
                             </a>
                         </li>
                         <li>
-                            <a href="/admin/hospital" class="flex items-center p-3 text-gray-600 dark:text-gray-400 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group transition-colors duration-300">
-                                <svg class="mr-2 w-6 h-6 text-gray-600 dark:text-gray-400 transition duration-75 group-hover:text-gray-900 dark:group-hover:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                    <!-- Hospital SVG icon -->
-                                </svg>
-                                <span class="ms-3 text-lg font-semibold text-gray-600 dark:text-gray-400">Hospital</span>
+                            <a href="/admin/policies" class="flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group transition-colors duration-300
+    @(ViewContext.RouteData.Values["controller"].ToString() == "Policies" ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:!text-white" : "text-gray-600 dark:!text-gray-100")">
+                                <i class="fas fa-file-alt mr-2 transition duration-75 group-hover:text-gray-900 dark:group-hover:text-gray-200 text-gray-500 dark:text-gray-400"></i>
+                                <span class="ms-3 text-lg font-semibold">Policies</span>
                             </a>
                         </li>
-                        <li>
-                            <a href="/admin/policies" class="flex items-center p-3 text-gray-600 dark:text-gray-400 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group transition-colors duration-300">
-                                <svg class="mr-2 w-6 h-6 text-gray-600 dark:text-gray-400 transition duration-75 group-hover:text-gray-900 dark:group-hover:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                    <!-- Policies SVG icon -->
-                                </svg>
-                                <span class="ms-3 text-lg font-semibold text-gray-600 dark:text-gray-400">Policies</span>
-                            </a>
-                        </li>
+
+
+
+
                     }
                     @if (User.IsInRole("Employee"))
                     {
@@ -187,30 +191,7 @@ else
         document.getElementById('menu').classList.toggle('hidden');
     });
 </script>
-    <script>
-        const sidebarLinks = document.querySelectorAll('#logo-sidebar ul li a');
 
-        function setActiveLink() {
-            const currentUrl = window.location.href;
-            const currentController = currentUrl.split('/')[3];
-            const currentAction = currentUrl.split('/')[4];
-
-            sidebarLinks.forEach((link) => {
-                const linkHref = link.getAttribute('href');
-                const linkController = linkHref.split('/')[3];
-                const linkAction = linkHref.split('/')[4];
-
-                if (linkController === currentController && linkAction === currentAction) {
-                    link.classList.add('bg-gray-100', 'dark:bg-gray-700', 'text-gray-900', 'dark:text-gray-200');
-                } else {
-                    link.classList.remove('bg-gray-100', 'dark:bg-gray-700', 'text-gray-900', 'dark:text-gray-200');
-                }
-            });
-        }
-
-        window.addEventListener('load', setActiveLink);
-        window.addEventListener('popstate', setActiveLink);
-    </script>
 
 <style>
     .active-nav {
@@ -221,5 +202,24 @@ else
 </style>
  
 @RenderSection("Scripts", required: false)
+    @section Scripts {
+        <script>
+            // Show the loading screen on AJAX requests
+            document.addEventListener("DOMContentLoaded", function() {
+                document.addEventListener("ajaxStart", function() {
+                    document.getElementById('loading-overlay').classList.remove('hidden');
+                });
+
+                document.addEventListener("ajaxStop", function() {
+                    document.getElementById('loading-overlay').classList.add('hidden');
+                });
+
+                // For page load
+                window.addEventListener('load', function() {
+                    document.getElementById('loading-overlay').classList.add('hidden');
+                });
+            });
+        </script>
+    }
 </body>
 </html>
