@@ -1,14 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using HealthInsurance.Entities;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
-namespace HealthInsurance.Entities
+namespace HealthInsurance.Models
 {
-    public class EmpRegister
+    public class EmpRegisterDto
     {
-        public EmpRegister()
-        {
-          Policies: new List<PoliciesOnEmployees>();
-        }
         [Key]
         public int EmpNo { get; set; }
 
@@ -48,9 +45,6 @@ namespace HealthInsurance.Entities
         public string PolicyStatus { get; set; }
 
         public int CompanyId { get; set; }
-        [ForeignKey(nameof(CompanyId))]
-        public CompanyDetails Company { get; set; }
-
-        public ICollection<PoliciesOnEmployees> Policies { get; set; }
+       
     }
 }
