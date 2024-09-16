@@ -41,12 +41,12 @@
             <tbody>
                 @foreach (var item in Model.PoliciesOnEmployees)
                 {
-                   <tr class="relative">
-        <td class="py-2 px-4 border-b border-gray-300 dark:border-gray-700">@item.Employee.FirstName</td>
-        <td class="py-2 px-4 border-b border-gray-300 dark:border-gray-700">@item.Policy.PolicyName</td>
-        <td class="py-2 px-4 border-b border-gray-300 dark:border-gray-700">@item.StartDate</td>
-        <td class="py-2 px-4 border-b border-gray-300 dark:border-gray-700">@item.EndDate</td>
-        <td class="py-2 px-4 border-b border-gray-300 dark:border-gray-700">@item.EMI</td>
+                    <tr class="relative">
+                        <td class="py-2 px-4 border-b border-gray-300 dark:border-gray-700">@item.Employee.FirstName</td>
+                        <td class="py-2 px-4 border-b border-gray-300 dark:border-gray-700">@item.Policy.PolicyName</td>
+                        <td class="py-2 px-4 border-b border-gray-300 dark:border-gray-700">@item.StartDate</td>
+                        <td class="py-2 px-4 border-b border-gray-300 dark:border-gray-700">@item.EndDate</td>
+                        <td class="py-2 px-4 border-b border-gray-300 dark:border-gray-700">@item.EMI</td>
                         <td class="py-2 px-4 border-b border-gray-300 dark:border-gray-700 text-right">
                             <button id="toggleButton-@item.Id" type="button" class="text-gray-500 relative dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 w-10" onclick="toggleDropdown('dropdown-@item.Id')">
                                 <i class="fas fa-ellipsis-v"></i>
@@ -71,10 +71,35 @@
     <div class="flex justify-center my-4">
         <nav aria-label="Page navigation">
             <ul class="inline-flex items-center space-x-2">
-                <!-- Pagination logic (similar to the hospital index view) -->
+                <!-- Previous Page Button -->
+                <li>
+                    <a href="@Url.Action("Index", new { searchString = Model.SearchString, pageNumber = Model.CurrentPage - 1 })"
+                       class="px-3 py-1 rounded-md text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    @(Model.CurrentPage == 1 ? "aria-disabled='true' aria-label='No previous page'" : "aria-label='Previous page'")>
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <!-- Page Number Links -->
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li>
+                        <a href="@Url.Action("Index", new { searchString = Model.SearchString, pageNumber = i })"
+                           class="px-3 py-1 rounded-md @(Model.CurrentPage == i ? "bg-blue-500 text-white" : "text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700")"
+                           aria-label="Page @i">@i</a>
+                    </li>
+                }
+                <!-- Next Page Button -->
+                <li>
+                    <a href="@Url.Action("Index", new { searchString = Model.SearchString, pageNumber = Model.CurrentPage + 1 })"
+                       class="px-3 py-1 rounded-md text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    @(Model.CurrentPage == Model.TotalPages ? "aria-disabled='true' aria-label='No next page'" : "aria-label='Next page'")>
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
             </ul>
         </nav>
     </div>
+
 </div>
 
 <script>

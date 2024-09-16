@@ -141,21 +141,31 @@
                             </a>
                         </li>
 
+                        <!-- Policy Requests -->
+                        <li>
+                            <a href="/admin/policyrequest" class="flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group transition-colors duration-300
+@(ViewContext.RouteData.Values["controller"].ToString() == "PolicyRequest" ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:!text-white" : "text-gray-600 dark:!text-gray-100")">
+                                <i class="fas fa-clipboard-list mr-3 text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200"></i>
+                                <span class="text-lg font-semibold">Policy Requests</span>
+                            </a>
+                        </li>
+
+                        <!-- Policy Approvals -->
+                        <li>
+                            <a href="/admin/policyapprovals" class="flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group transition-colors duration-300
+@(ViewContext.RouteData.Values["controller"].ToString() == "PolicyApproval" ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:!text-white" : "text-gray-600 dark:!text-gray-100")">
+                                <i class="fas fa-check-circle mr-3 text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200"></i>
+                                <span class="text-lg font-semibold">Policy Approvals</span>
+                            </a>
+                        </li>
+
+
                         <!-- Settings -->
                         <li>
                             <a href="/admin/settings" class="flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group transition-colors duration-300
         @(ViewContext.RouteData.Values["controller"].ToString() == "Settings" ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:!text-white" : "text-gray-600 dark:!text-gray-100")">
                                 <i class="fas fa-cogs mr-3 text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200"></i>
                                 <span class="text-lg font-semibold">Settings</span>
-                            </a>
-                        </li>
-
-                        <!-- Reports -->
-                        <li>
-                            <a href="/admin/reports" class="flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group transition-colors duration-300
-        @(ViewContext.RouteData.Values["controller"].ToString() == "Reports" ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:!text-white" : "text-gray-600 dark:!text-gray-100")">
-                                <i class="fas fa-chart-line mr-3 text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200"></i>
-                                <span class="text-lg font-semibold">Reports</span>
                             </a>
                         </li>
 
