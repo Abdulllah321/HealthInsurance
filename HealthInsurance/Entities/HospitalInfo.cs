@@ -5,22 +5,19 @@ namespace HealthInsurance.Entities
     public class HospitalInfo
     {
         [Key]
-        [Required]
-        public Guid HospitalId { get; set; } = Guid.NewGuid();
+        public int HospitalId { get; set; }
 
-        [Required(ErrorMessage = "Hospital name is required.")]
-        [StringLength(100, ErrorMessage = "Hospital name cannot be longer than 100 characters.")]
+        [Required]
+        [StringLength(50)]
         public string HospitalName { get; set; }
 
-        [Required(ErrorMessage = "Phone number is required.")]
-        [Phone(ErrorMessage = "Invalid phone number.")]
+        [StringLength(50)]
         public string PhoneNo { get; set; }
 
-        [Required(ErrorMessage = "Location is required.")]
-        [StringLength(200, ErrorMessage = "Location cannot be longer than 200 characters.")]
+        [StringLength(50)]
         public string Location { get; set; }
 
-        [Url(ErrorMessage = "Invalid URL format.")]
-        public string Url { get; set; }
+        [StringLength(100)]
+        public string URL { get; set; }
     }
 }

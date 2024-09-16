@@ -12,6 +12,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="~/font-awesome/css/all.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Baskervville+SC:wght@400;700&family=Raleway:wght@400;600;900&display=swap" rel="stylesheet" />
     <script>
     tailwind.config = {
@@ -81,22 +82,21 @@
         <aside id="logo-sidebar" class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700" aria-label="Sidebar">
             <div class="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800 rounded-tr-lg rounded-br-lg">
                 <ul class="space-y-2 font-medium">
-                    <li>
-                        <a href="/admin" class="flex items-center p-3 text-gray-600 dark:text-gray-400 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group transition-colors duration-300">
-                            <svg class="mr-2 w-6 h-6 text-gray-600 dark:text-gray-400 transition duration-75 group-hover:text-gray-900 dark:group-hover:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 21">
-                                <path d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z" />
-                                <path d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z" />
-                            </svg>
-                            <span class="ms-3 text-lg font-semibold text-gray-600 dark:text-gray-400">Dashboard</span>
-                        </a>
-                    </li>
+                   
                     @if (User.IsInRole("Admin"))
                     {
                         <li>
-                            <a href="/admin/companydetails" class="flex items-center p-3 text-gray-600 dark:text-gray-400 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group transition-colors duration-300">
-                                <svg class="mr-2 w-6 h-6 text-gray-600 dark:text-gray-400 transition duration-75 group-hover:text-gray-900 dark:group-hover:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M3 4h14v2H3V4zm0 4h14v2H3V8zm0 4h14v2H3v-2z"></path>
+                            <a href="/admin" class="flex items-center p-3 text-gray-600 dark:text-gray-400 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group transition-colors duration-300">
+                                <svg class="mr-2 w-6 h-6 text-gray-600 dark:text-gray-400 transition duration-75 group-hover:text-gray-900 dark:group-hover:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 21">
+                                    <path d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z" />
+                                    <path d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z" />
                                 </svg>
+                                <span class="ms-3 text-lg font-semibold text-gray-600 dark:text-gray-400">Dashboard</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/admin/companies" class="flex items-center p-3 text-gray-600 dark:text-gray-400 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group transition-colors duration-300">
+                                <i class="fa-solid fa-building mr-2 w-6 h-6 text-gray-600 dark:text-gray-400 transition duration-75 group-hover:text-gray-900 dark:group-hover:text-gray-200"></i>
                                 <span class="ms-3 text-lg font-semibold text-gray-600 dark:text-gray-400">Company</span>
                             </a>
                         </li>

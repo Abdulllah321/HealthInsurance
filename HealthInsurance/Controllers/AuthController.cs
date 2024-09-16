@@ -119,12 +119,11 @@ namespace HealthInsurance.Controllers
                     Country = model.Country,
                     City = model.City,
                     PolicyStatus = model.PolicyStatus,
-                    PolicyId = model.PolicyId
                 };
 
                 try
                 {
-                    _context.EmpRegisteration.Add(employee);
+                    _context.Employees.Add(employee);
                     await _context.SaveChangesAsync();
 
                     ModelState.Clear();
@@ -185,7 +184,7 @@ namespace HealthInsurance.Controllers
         {
             if (ModelState.IsValid)
             {
-                var employee = await _context.EmpRegisteration
+                var employee = await _context.Employees
                     .Where(x => x.Username == model.Username && x.Password == model.Password)
                     .FirstOrDefaultAsync();
 

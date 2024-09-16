@@ -1,60 +1,55 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HealthInsurance.Entities;
 
 namespace HealthInsurance.Controllers
 {
     [Route("admin/[controller]")]
-    public class CompanyDetailsController : Controller
+    public class CompaniesController : Controller
     {
         private readonly AppDbContext _context;
+        private const int PageSize = 10; // Number of companies per page
 
-        public CompanyDetailsController(AppDbContext context)
+        public CompaniesController(AppDbContext context)
         {
             _context = context;
         }
 
-
-        [HttpGet]
-        // GET: CompanyDetails
-        public async Task<IActionResult> Index(string searchString, int page = 1)
+        // GET: admin/companies/index
+        [HttpGet("")]
+        public async Task<IActionResult> Index(string searchString, int pageNumber = 1)
         {
-            const int pageSize = 10;
-
-            IQueryable<CompanyDetails> companies = _context.CompanyDetails;
+            var companies = from c in _context.Companies
+                            select c;
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                companies = companies.Where(c => c.CompanyName.Contains(searchString) ||
-                                                  c.Address.Contains(searchString) ||
-                                                  c.Phone.Contains(searchString) ||
-                                                  c.CompanyURL.Contains(searchString));
+                companies = companies.Where(c => c.CompanyName.Contains(searchString));
             }
 
             var totalItems = await companies.CountAsync();
-            var companiesPaged = await companies
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
+            var companiesToDisplay = await companies
+                .OrderBy(c => c.CompanyId)
+                .Skip((pageNumber - 1) * PageSize)
+                .Take(PageSize)
                 .ToListAsync();
 
-            var model = new CompanyListViewModel
+            var viewModel = new CompanyIndexViewModel
             {
-                Companies = companiesPaged,
-                CurrentPage = page,
-                TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize),
-                SearchString = searchString
+                Companies = companiesToDisplay,
+                SearchString = searchString,
+                CurrentPage = pageNumber,
+                TotalPages = (int)Math.Ceiling(totalItems / (double)PageSize)
             };
 
-            return View(model);
+            return View(viewModel);
         }
 
-        [HttpGet("Details/{id}")]
-        // GET: CompanyDetails/Details/5
+        // GET: admin/companies/details/5
+        [HttpGet("details/{id}")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -62,7 +57,7 @@ namespace HealthInsurance.Controllers
                 return NotFound();
             }
 
-            var companyDetails = await _context.CompanyDetails
+            var companyDetails = await _context.Companies
                 .FirstOrDefaultAsync(m => m.CompanyId == id);
             if (companyDetails == null)
             {
@@ -72,17 +67,15 @@ namespace HealthInsurance.Controllers
             return View(companyDetails);
         }
 
-        // GET: CompanyDetails/Create
-        [HttpGet("Create")]
+        // GET: admin/companies/create
+        [HttpGet("create")]
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: CompanyDetails/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost("Create")]
+        // POST: admin/companies/create
+        [HttpPost("create")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("CompanyId,CompanyName,Address,Phone,CompanyURL")] CompanyDetails companyDetails)
         {
@@ -95,8 +88,8 @@ namespace HealthInsurance.Controllers
             return View(companyDetails);
         }
 
-        // GET: CompanyDetails/Edit/5
-        [HttpGet("Edit/{id}")]
+        // GET: admin/companies/edit/5
+        [HttpGet("edit/{id}")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -104,7 +97,7 @@ namespace HealthInsurance.Controllers
                 return NotFound();
             }
 
-            var companyDetails = await _context.CompanyDetails.FindAsync(id);
+            var companyDetails = await _context.Companies.FindAsync(id);
             if (companyDetails == null)
             {
                 return NotFound();
@@ -112,10 +105,8 @@ namespace HealthInsurance.Controllers
             return View(companyDetails);
         }
 
-        // POST: CompanyDetails/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost("Edit/{id}")]
+        // POST: admin/companies/edit/5
+        [HttpPost("edit/{id}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("CompanyId,CompanyName,Address,Phone,CompanyURL")] CompanyDetails companyDetails)
         {
@@ -147,8 +138,8 @@ namespace HealthInsurance.Controllers
             return View(companyDetails);
         }
 
-        [HttpGet("Delete/{id}")]
-        // GET: CompanyDetails/Delete/5
+        // GET: admin/companies/delete/5
+        [HttpGet("delete/{id}")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -156,7 +147,7 @@ namespace HealthInsurance.Controllers
                 return NotFound();
             }
 
-            var companyDetails = await _context.CompanyDetails
+            var companyDetails = await _context.Companies
                 .FirstOrDefaultAsync(m => m.CompanyId == id);
             if (companyDetails == null)
             {
@@ -166,16 +157,15 @@ namespace HealthInsurance.Controllers
             return View(companyDetails);
         }
 
-        // POST: CompanyDetails/Delete/5
-        [HttpPost("Delete/{id}")]
-        [ActionName("Delete")]
+        // POST: admin/companies/delete/5
+        [HttpPost("delete/{id}"), ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var companyDetails = await _context.CompanyDetails.FindAsync(id);
+            var companyDetails = await _context.Companies.FindAsync(id);
             if (companyDetails != null)
             {
-                _context.CompanyDetails.Remove(companyDetails);
+                _context.Companies.Remove(companyDetails);
             }
 
             await _context.SaveChangesAsync();
@@ -184,7 +174,15 @@ namespace HealthInsurance.Controllers
 
         private bool CompanyDetailsExists(int id)
         {
-            return _context.CompanyDetails.Any(e => e.CompanyId == id);
+            return _context.Companies.Any(e => e.CompanyId == id);
         }
+    }
+
+    public class CompanyIndexViewModel
+    {
+        public IEnumerable<CompanyDetails> Companies { get; set; }
+        public string SearchString { get; set; }
+        public int CurrentPage { get; set; }
+        public int TotalPages { get; set; }
     }
 }

@@ -1,14 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HealthInsurance.Entities
 {
-    public class Policy
+    public class PolicyTotalDescription
     {
         [Key]
         public int PolicyId { get; set; }
 
-        [Required]
         [StringLength(50)]
         public string PolicyName { get; set; }
 
@@ -21,13 +19,12 @@ namespace HealthInsurance.Entities
         [DataType(DataType.Currency)]
         public decimal EMI { get; set; }
 
-        public int CompanyId { get; set; }
-        [ForeignKey(nameof(CompanyId))]
-        public CompanyDetails Company { get; set; }
+        public int PolicyDurationInMonths { get; set; }
+
+        [StringLength(50)]
+        public string CompanyName { get; set; }
 
         [StringLength(50)]
         public string Medicaid { get; set; }
-
-        public ICollection<PoliciesOnEmployees> PoliciesOnEmployees { get; set; }
     }
 }
