@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using HealthInsurance.Entities;
+using System.ComponentModel.DataAnnotations;
 
 namespace HealthInsurance.Models
 {
-    public class PolicyRequestDetailsDto
+    public class PolicyRequestDetailsUpdateDto
     {
         [Key]
         public int RequestId { get; set; }
@@ -20,5 +21,8 @@ namespace HealthInsurance.Models
         public decimal EMI { get; set; }
 
         public int CompanyId { get; set; }
+
+        [StringLength(50)]
+        public string Status { get; set; }
     }
 }

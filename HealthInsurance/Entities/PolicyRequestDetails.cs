@@ -27,5 +27,7 @@ namespace HealthInsurance.Entities
 
         [StringLength(50)]
         public string Status { get; set; }
+        public ICollection<PolicyApprovalDetails> PolicyApproval{ get; set; }
+
     }
 }

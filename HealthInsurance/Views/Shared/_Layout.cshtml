@@ -152,7 +152,7 @@
 
                         <!-- Policy Approvals -->
                         <li>
-                            <a href="/admin/policyapprovals" class="flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group transition-colors duration-300
+                            <a href="/admin/policyapproval" class="flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group transition-colors duration-300
 @(ViewContext.RouteData.Values["controller"].ToString() == "PolicyApproval" ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:!text-white" : "text-gray-600 dark:!text-gray-100")">
                                 <i class="fas fa-check-circle mr-3 text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200"></i>
                                 <span class="text-lg font-semibold">Policy Approvals</span>
@@ -168,15 +168,15 @@
                                 <span class="text-lg font-semibold">Settings</span>
                             </a>
                         </li>
-
-                        <!-- Help -->
-                        <li>
-                            <a href="/admin/help" class="flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group transition-colors duration-300
-        @(ViewContext.RouteData.Values["controller"].ToString() == "Help" ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:!text-white" : "text-gray-600 dark:!text-gray-100")">
-                                <i class="fas fa-question-circle mr-3 text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200"></i>
-                                <span class="text-lg font-semibold">Help</span>
-                            </a>
-                        </li>
+@* 
+                         <!-- Help -->
+                         <li>
+                             <a href="/admin/help" class="flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group transition-colors duration-300
+         @(ViewContext.RouteData.Values["controller"].ToString() == "Help" ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:!text-white" : "text-gray-600 dark:!text-gray-100")">
+                                 <i class="fas fa-question-circle mr-3 text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200"></i>
+                                 <span class="text-lg font-semibold">Help</span>
+                             </a>
+                         </li> *@
 
                     }
                     @if (User.IsInRole("Employee"))

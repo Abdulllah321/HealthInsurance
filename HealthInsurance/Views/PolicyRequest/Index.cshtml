@@ -15,6 +15,9 @@
             <button type="submit" class="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</button>
         </div>
     </form>
+    <div class="flex justify-end mb-4">
+        <a href="@Url.Action("Create")" class="bg-green-500 text-white hover:bg-green-600 dark:bg-green-700 dark:hover:bg-green-800 rounded-md px-4 py-2">Submit a new  Request</a>
+    </div>
 
     <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-md">
         @if (Model.PolicyRequests.Any())
@@ -42,8 +45,24 @@
                         <td class="py-2 px-4">@item.Policy.PolicyName</td>
                         <td class="py-2 px-4">@item.PolicyAmount</td>
                         <td class="py-2 px-4">@item.EMI</td>
-                        <td class="py-2 px-4">@item.Status</td>
-                        <td class="py-2 px-4 text-right">
+           <td class="py-2 px-4">
+                                @if (item.Status == "Pending")
+                                {
+                                    <span class="bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300 px-2 py-1 rounded-full text-xs font-medium">Pending</span>
+                                }
+                                else if (item.Status == "Approved")
+                                {
+                                    <span class="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300 px-2 py-1 rounded-full text-xs font-medium">Approved</span>
+                                }
+                                else if (item.Status == "Rejected")
+                                {
+                                    <span class="bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300 px-2 py-1 rounded-full text-xs font-medium">Rejected</span>
+                                }
+                                else
+                                {
+                                    <span class="bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300 px-2 py-1 rounded-full text-xs font-medium">Unknown</span>
+                                }
+                        </td>                        <td class="py-2 px-4 text-right">
                             <!-- Three dots icon (Vertical Ellipsis) -->
                             <button id="toggleButton-@item.RequestId" type="button" class="text-gray-500 relative dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 w-10" onclick="toggleDropdown('dropdown-@item.RequestId')">
                                 <i class="fas fa-ellipsis-v"></i>

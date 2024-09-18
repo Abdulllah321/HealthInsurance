@@ -109,6 +109,7 @@ namespace HealthInsurance.Controllers
         [HttpGet("Create")]
         public IActionResult Create()
         {
+
             ViewData["CompanyId"] = new SelectList(_context.Companies, "CompanyId", "CompanyName");
             ViewData["EmpNo"] = new SelectList(_context.Employees, "EmpNo", "FirstName");
             ViewData["PolicyId"] = new SelectList(_context.Policies, "PolicyId", "PolicyName");
@@ -118,30 +119,29 @@ namespace HealthInsurance.Controllers
         // POST: admin/PolicyRequest/Create
         [HttpPost("Create")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("RequestId,RequestDate,EmpNo,PolicyId,PolicyAmount,EMI,CompanyId,Status")] PolicyRequestDetailsDto policyRequestDetails)
+        public async Task<IActionResult> Create([Bind("RequestId,RequestDate,EmpNo,PolicyId,PolicyAmount,EMI,CompanyId,Status")] PolicyRequestDetailsDto policyRequestDetailsdto)
         {
             if (ModelState.IsValid)
             {
                 var policyRequest = new PolicyRequestDetails
                 {
-                    RequestDate = policyRequestDetails.RequestDate,
-                    EmpNo = policyRequestDetails.EmpNo,
-                    PolicyId = policyRequestDetails.PolicyId,
-                    PolicyAmount = policyRequestDetails.PolicyAmount,
-                    EMI = policyRequestDetails.EMI,
-                    CompanyId = policyRequestDetails.CompanyId,
-                    Status = policyRequestDetails.Status
+                    RequestDate = policyRequestDetailsdto.RequestDate,
+                    EmpNo = policyRequestDetailsdto.EmpNo,
+                    PolicyId = policyRequestDetailsdto.PolicyId,
+                    PolicyAmount = policyRequestDetailsdto.PolicyAmount,
+                    EMI = policyRequestDetailsdto.EMI,
+                    CompanyId = policyRequestDetailsdto.CompanyId,
                 };
 
                 _context.PolicyRequests.Add(policyRequest);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-
-            ViewData["CompanyId"] = new SelectList(_context.Companies, "CompanyId", "CompanyName", policyRequestDetails.CompanyId);
-            ViewData["EmpNo"] = new SelectList(_context.Employees, "EmpNo", "FirstName", policyRequestDetails.EmpNo);
-            ViewData["PolicyId"] = new SelectList(_context.Policies, "PolicyId", "PolicyName", policyRequestDetails.PolicyId);
-            return View(policyRequestDetails);
+   
+            ViewData["CompanyId"] = new SelectList(_context.Companies, "CompanyId", "CompanyName");
+            ViewData["EmpNo"] = new SelectList(_context.Employees, "EmpNo", "FirstName");
+            ViewData["PolicyId"] = new SelectList(_context.Policies, "PolicyId", "PolicyName");
+            return View(policyRequestDetailsdto);
         }
 
         // GET: admin/PolicyRequest/Edit/5
@@ -158,6 +158,12 @@ namespace HealthInsurance.Controllers
             {
                 return NotFound();
             }
+            ViewBag.Status = new SelectList(new List<SelectListItem>
+    {
+        new SelectListItem { Value = "Pending", Text = "Pending" },
+        new SelectListItem { Value = "Approved", Text = "Approved" },
+        new SelectListItem { Value = "Rejected", Text = "Rejected" }
+    }, "Value", "Text");
             ViewData["CompanyId"] = new SelectList(_context.Companies, "CompanyId", "CompanyName", policyRequestDetails.CompanyId);
             ViewData["EmpNo"] = new SelectList(_context.Employees, "EmpNo", "FirstName", policyRequestDetails.EmpNo);
             ViewData["PolicyId"] = new SelectList(_context.Policies, "PolicyId", "PolicyName", policyRequestDetails.PolicyId);
@@ -165,9 +171,10 @@ namespace HealthInsurance.Controllers
         }
 
         // POST: admin/PolicyRequest/Edit/5
+        // POST: admin/PolicyRequest/Edit/5
         [HttpPost("Edit/{id}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("RequestId,RequestDate,EmpNo,PolicyId,PolicyAmount,EMI,CompanyId,Status")] PolicyRequestDetailsDto policyRequestDetails)
+        public async Task<IActionResult> Edit(int id, [Bind("RequestId,RequestDate,EmpNo,PolicyId,PolicyAmount,EMI,CompanyId,Status")] PolicyRequestDetailsUpdateDto policyRequestDetails)
         {
             if (id != policyRequestDetails.RequestId)
             {
@@ -194,6 +201,15 @@ namespace HealthInsurance.Controllers
 
                     _context.PolicyRequests.Update(existingPolicyRequest);
                     await _context.SaveChangesAsync();
+
+                    // Redirect to PolicyApproval Create page if status is Approved or Rejected
+                    if (policyRequestDetails.Status == "Approved" || policyRequestDetails.Status == "Rejected")
+                    {
+                        bool isApproved = policyRequestDetails.Status == "Approved";
+                        return RedirectToAction("Create", "PolicyApproval", new { requestId = policyRequestDetails.RequestId, isApproved });
+                    }
+
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -206,14 +222,22 @@ namespace HealthInsurance.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
             }
+
+            ViewBag.Status = new SelectList(new List<SelectListItem>
+    {
+        new SelectListItem { Value = "Pending", Text = "Pending" },
+        new SelectListItem { Value = "Approved", Text = "Approved" },
+        new SelectListItem { Value = "Rejected", Text = "Rejected" }
+    }, "Value", "Text");
 
             ViewData["CompanyId"] = new SelectList(_context.Companies, "CompanyId", "CompanyName", policyRequestDetails.CompanyId);
             ViewData["EmpNo"] = new SelectList(_context.Employees, "EmpNo", "FirstName", policyRequestDetails.EmpNo);
             ViewData["PolicyId"] = new SelectList(_context.Policies, "PolicyId", "PolicyName", policyRequestDetails.PolicyId);
+
             return View(policyRequestDetails);
         }
+
 
         // GET: admin/PolicyRequest/Delete/5
         [HttpGet("Delete/{id}")]

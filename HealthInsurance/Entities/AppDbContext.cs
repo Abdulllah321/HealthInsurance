@@ -75,6 +75,9 @@ namespace HealthInsurance.Entities
                 .WithMany()
                 .HasForeignKey(pr => pr.CompanyId)
                 .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<PolicyRequestDetails>()
+              .Property(p => p.Status)
+              .HasDefaultValue("Pending");
         }
 
 

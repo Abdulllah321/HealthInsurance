@@ -4,6 +4,7 @@ using HealthInsurance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HealthInsurance.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240918120923_d")]
+    partial class d
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -438,7 +441,7 @@ namespace HealthInsurance.Migrations
                         .IsRequired();
 
                     b.HasOne("HealthInsurance.Entities.PolicyRequestDetails", "policyRequestDetails")
-                        .WithMany("PolicyApproval")
+                        .WithMany()
                         .HasForeignKey("RequestId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -490,11 +493,6 @@ namespace HealthInsurance.Migrations
             modelBuilder.Entity("HealthInsurance.Entities.Policy", b =>
                 {
                     b.Navigation("PoliciesOnEmployees");
-                });
-
-            modelBuilder.Entity("HealthInsurance.Entities.PolicyRequestDetails", b =>
-                {
-                    b.Navigation("PolicyApproval");
                 });
 #pragma warning restore 612, 618
         }
