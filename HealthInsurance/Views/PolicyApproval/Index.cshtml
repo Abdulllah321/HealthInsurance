@@ -29,7 +29,7 @@
                             <td class="py-2 px-4">@item.Date.ToShortDateString()</td>
                             <td class="py-2 px-4">@item.Amount</td>
                             <td class="py-2 px-4">@item.Approved</td>
-                            <td class="py-2 px-4">@item.Reason</td>
+                            <td class="py-2 px-4">@item.Reason ?? "N/A"</td>
                             <td class="py-2 px-4 text-right">
                                 <!-- Three dots icon (Vertical Ellipsis) -->
                                 <button id="toggleButton-@item.Id" type="button" class="text-gray-500 relative dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 w-10" onclick="toggleDropdown('dropdown-@item.Id')">

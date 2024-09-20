@@ -42,8 +42,9 @@ namespace HealthInsurance.Controllers
             // Apply search filter
             if (!string.IsNullOrEmpty(searchString))
             {
-                policyApprovals = policyApprovals.Where(p => p.Policy.PolicyName.Contains(searchString)
-                                                            || p.Reason.Contains(searchString));
+                policyApprovals = policyApprovals.Where(p =>
+                    p.Policy.PolicyName.Contains(searchString) ||
+                    (p.Reason != null && p.Reason.Contains(searchString)));
             }
 
             // Apply sorting

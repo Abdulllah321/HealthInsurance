@@ -23,6 +23,6 @@ namespace HealthInsurance.Entities
         public bool Approved { get; set; }
 
         [StringLength(50)]
-        public string Reason { get; set; }
+        public string? Reason { get; set; }
     }
 }
