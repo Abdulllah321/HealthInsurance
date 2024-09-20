@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HealthInsurance.Entities;
 using HealthInsurance.Models;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace HealthInsurance.Controllers
 {

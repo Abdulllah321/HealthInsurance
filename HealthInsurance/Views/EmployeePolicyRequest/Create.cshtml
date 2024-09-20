@@ -1,0 +1,79 @@
+﻿@model HealthInsurance.Entities.PolicyRequestDetails
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1 class="text-2xl font-bold mb-6">Create Policy Request</h1>
+
+<div class="bg-white dark:bg-gray-800 shadow-md rounded-lg px-8 pt-6 pb-8 mb-4">
+    <form asp-action="Create">
+        <div asp-validation-summary="ModelOnly" class="text-red-600 dark:text-red-400 mb-4"></div>
+
+        <div class="mb-6">
+            <label asp-for="RequestDate" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">
+                <i class="fas fa-calendar-alt mr-2"></i>@Html.DisplayNameFor(model => model.RequestDate)
+            </label>
+            <div class="relative">
+                <input asp-for="RequestDate" class="form-control w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-900 dark:text-gray-300" />
+                <span asp-validation-for="RequestDate" class="text-red-600 dark:text-red-400 text-sm"></span>
+            </div>
+        </div>
+
+        <div class="mb-6">
+            <label asp-for="PolicyId" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">
+                <i class="fas fa-file-alt mr-2"></i>@Html.DisplayNameFor(model => model.PolicyId)
+            </label>
+            <select asp-for="PolicyId" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-900 dark:text-gray-300" asp-items="ViewBag.PolicyId">
+                <option value="">-- Select Policy --</option>
+            </select>
+        </div>
+
+        <div class="mb-6">
+            <label asp-for="PolicyAmount" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">
+                <i class="fas fa-dollar-sign mr-2"></i>@Html.DisplayNameFor(model => model.PolicyAmount)
+            </label>
+            <input asp-for="PolicyAmount" class="form-control w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-900 dark:text-gray-300" />
+            <span asp-validation-for="PolicyAmount" class="text-red-600 dark:text-red-400 text-sm"></span>
+        </div>
+
+        <div class="mb-6">
+            <label asp-for="EMI" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">
+                <i class="fas fa-money-check-alt mr-2"></i>@Html.DisplayNameFor(model => model.EMI)
+            </label>
+            <input asp-for="EMI" class="form-control w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-900 dark:text-gray-300" />
+            <span asp-validation-for="EMI" class="text-red-600 dark:text-red-400 text-sm"></span>
+        </div>
+
+        <div class="mb-6">
+            <label asp-for="CompanyId" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">
+                <i class="fas fa-building mr-2"></i>@Html.DisplayNameFor(model => model.CompanyId)
+            </label>
+            <select asp-for="CompanyId" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-900 dark:text-gray-300" asp-items="ViewBag.CompanyId">
+                <option value="">-- Select Company --</option>
+            </select>
+        </div>
+
+
+        <div class="flex items-center gap-4 flex-row-reverse mt-8">
+            <div class="w-full">
+                <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 dark:bg-blue-700 dark:hover:bg-blue-800 rounded-lg py-3 font-medium text-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition duration-150 ease-in-out">
+                    Create
+                </button>
+            </div>
+            <div class="text-center whitespace-nowrap">
+                <a asp-action="Index" class="inline-flex items-center text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium transition duration-150 ease-in-out">
+                    <i class="fas fa-arrow-left mr-2"></i> Back to List
+                </a>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

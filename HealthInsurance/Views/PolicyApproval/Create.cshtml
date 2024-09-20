@@ -11,9 +11,20 @@
     <form asp-action="Create">
         <div asp-validation-summary="ModelOnly" class="text-red-600 dark:text-red-400 mb-4"></div>
 
-        <!-- Hidden field for RequestId -->
-        <input type="hidden" asp-for="RequestId" />
+        <!-- RequestId Select Box -->
+        <div class="mb-6">
+            <label asp-for="RequestId" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">
+                <i class="fas fa-id-card mr-2"></i>@Html.DisplayNameFor(model => model.RequestId)
+            </label>
+            <select asp-for="RequestId" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-900 dark:text-gray-300" asp-items="ViewBag.RequestId">
+                <option value="">-- Select Request --</option>
+            </select>
 
+
+            <span asp-validation-for="RequestId" class="text-red-600 dark:text-red-400 text-sm"></span>
+        </div>
+
+        <!-- PolicyId Select Box -->
         <div class="mb-6">
             <label asp-for="PolicyId" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">
                 <i class="fas fa-file-alt mr-2"></i>@Html.DisplayNameFor(model => model.PolicyId)
@@ -24,16 +35,16 @@
             <span asp-validation-for="PolicyId" class="text-red-600 dark:text-red-400 text-sm"></span>
         </div>
 
+        <!-- Date Input -->
         <div class="mb-6">
             <label asp-for="Date" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">
                 <i class="fas fa-calendar-alt mr-2"></i>@Html.DisplayNameFor(model => model.Date)
             </label>
-            <div class="relative">
-                <input asp-for="Date" class="form-control w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-900 dark:text-gray-300" />
-                <span asp-validation-for="Date" class="text-red-600 dark:text-red-400 text-sm"></span>
-            </div>
+            <input asp-for="Date" class="form-control w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-900 dark:text-gray-300" />
+            <span asp-validation-for="Date" class="text-red-600 dark:text-red-400 text-sm"></span>
         </div>
 
+        <!-- Amount Input -->
         <div class="mb-6">
             <label asp-for="Amount" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">
                 <i class="fas fa-dollar-sign mr-2"></i>@Html.DisplayNameFor(model => model.Amount)
@@ -42,6 +53,7 @@
             <span asp-validation-for="Amount" class="text-red-600 dark:text-red-400 text-sm"></span>
         </div>
 
+        <!-- Reason Input -->
         <div class="mb-6">
             <label asp-for="Reason" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">
                 <i class="fas fa-reason mr-2"></i>@Html.DisplayNameFor(model => model.Reason)
@@ -50,21 +62,16 @@
             <span asp-validation-for="Reason" class="text-red-600 dark:text-red-400 text-sm"></span>
         </div>
 
-        <div class="mb-6 flex items-center">
-            <label class="flex items-center cursor-pointer">
-                <div class="relative w-14">
-                    <input type="checkbox" asp-for="Approved" id="approvedToggle" class="sr-only" />
-                    <div class="block bg-gray-400 dark:bg-gray-600 w-14 h-8 rounded-full relative checkboxBlock">
-                        <div class="dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition"></div>
-                    </div>
-                </div>
-                <span class="ml-3 text-gray-700 dark:text-gray-300 text-sm font-bold" for="approvedToggle">
-                    @Html.DisplayNameFor(model => model.Approved)
-                </span>
+        <!-- Approved Toggle -->
+        <div class="space-y-2">
+            <label class="flex items-center">
+                <input type="checkbox" asp-for="Approved" class="mr-2" />
+                @Html.DisplayNameFor(model => model.Approved)
             </label>
-            <span asp-validation-for="Approved" class="text-red-600 dark:text-red-400 text-sm"></span>
         </div>
 
+
+        <!-- Submit Button -->
         <div class="flex items-center gap-4 flex-row-reverse mt-8">
             <div class="w-full">
                 <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 dark:bg-blue-700 dark:hover:bg-blue-800 rounded-lg py-3 font-medium text-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition duration-150 ease-in-out">
@@ -94,18 +101,15 @@
                     block.style.backgroundColor = '#4CAF50'; // Green color when checked
                 } else {
                     dot.style.transform = 'translateX(0)';
-                    block.style.backgroundColor = '#9E9E9E'; // Gray color when unchecked
+                    block.style.backgroundColor = '#ccc'; // Gray color when not checked
                 }
             }
 
-            // Initial update on page load
+            // Initial state update
             updateToggle();
 
-            // Event listener for toggle state change
+            // Event listener to update on change
             toggle.addEventListener('change', updateToggle);
         });
     </script>
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
 }

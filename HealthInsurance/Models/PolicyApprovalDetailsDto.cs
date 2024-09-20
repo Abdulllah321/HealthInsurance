@@ -1,28 +1,21 @@
-﻿using HealthInsurance.Entities;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace HealthInsurance.Models
+public class PolicyApprovalDetailsDto
 {
-    public class PolicyApprovalDetailsDto
-    {
-        [Key]
-        public int Id { get; set; }
+    [Key]
+    public int Id { get; set; }
 
-        public int PolicyId { get; set; }      
-        public int RequestId { get; set; }
+    public int PolicyId { get; set; }
+    public int RequestId { get; set; }  // No need for [ForeignKey] here
 
-        [ForeignKey(nameof(PolicyId))]
+    public DateTime Date { get; set; }
 
-        public DateTime Date { get; set; }
+    [DataType(DataType.Currency)]
+    [Range(0, double.MaxValue, ErrorMessage = "Amount must be a valid number.")]
+    public decimal Amount { get; set; }
 
-        [DataType(DataType.Currency)]
-        [Range(0, double.MaxValue, ErrorMessage = "Amount must be a valid number.")]
-        public decimal Amount { get; set; }
+    public bool Approved { get; set; }
 
-        public bool Approved { get; set; }
-
-        [StringLength(50)]
-        public string Reason { get; set; }
-    }
+    [StringLength(50)]
+    public string Reason { get; set; }
 }

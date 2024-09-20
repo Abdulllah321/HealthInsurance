@@ -1,1 +1,258 @@
-﻿
+﻿@model HealthInsurance.Controllers.DashboardViewModel
+
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-4">
+    <!-- Widget 1: Total Policies -->
+    <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-4 flex items-center">
+        <div class="w-12 h-12 flex-shrink-0 bg-blue-500 text-white rounded-full flex items-center justify-center">
+            <i class="fas fa-file-alt fa-2x"></i>
+        </div>
+        <div class="ml-4">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Total Policies</h2>
+            <p id="totalPolicies" class="text-4xl font-bold text-gray-900 dark:text-gray-300 mt-1"></p>
+        </div>
+    </div>
+
+    <!-- Widget 2: Claims Overview -->
+    <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-4 flex items-center">
+        <div class="w-12 h-12 flex-shrink-0 bg-green-500 text-white rounded-full flex items-center justify-center">
+            <i class="fas fa-clipboard-list fa-2x"></i>
+        </div>
+        <div class="ml-4">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Claims Overview</h2>
+            <p id="claimsOverview" class="text-4xl font-bold text-gray-900 dark:text-gray-300 mt-1"></p>
+        </div>
+    </div>
+
+    <!-- Widget 3: Active Policies -->
+    <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-4 flex items-center">
+        <div class="w-12 h-12 flex-shrink-0 bg-yellow-500 text-white rounded-full flex items-center justify-center">
+            <i class="fas fa-check-circle fa-2x"></i>
+        </div>
+        <div class="ml-4">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Active Policies</h2>
+            <p id="activePolicies" class="text-4xl font-bold text-gray-900 dark:text-gray-300 mt-1"></p>
+        </div>
+    </div>
+
+    <!-- Widget 4: Pending Approvals -->
+    <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-4 flex items-center">
+        <div class="w-12 h-12 flex-shrink-0 bg-red-500 text-white rounded-full flex items-center justify-center">
+            <i class="fas fa-exclamation-triangle fa-2x"></i>
+        </div>
+        <div class="ml-4">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Pending Approvals</h2>
+            <p id="pendingApprovals" class="text-4xl font-bold text-gray-900 dark:text-gray-300 mt-1"></p>
+        </div>
+    </div>
+
+    <!-- Widget 5: Total Claims Amount -->
+    <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-8 col-span-2 flex items-center justify-between relative overflow-hidden">
+        <div class="absolute -top-[30%] -left-[15%] bg-gradient-to-r from-gray-200 dark:from-blue-600 to-transparent h-[150%] w-1/2 rotate-45"></div>
+        <div class="absolute -bottom-[50%] -right-[12%] bg-gradient-to-r from-gray-100 dark:from-blue-600 to-transparent h-[150%] w-[30%] rotate-[-70deg]"></div>
+        <div class="ml-4 z-10">
+            <h2 class="text-3xl font-bold text-gray-900 dark:text-white">Total Claims Amount</h2>
+            <p id="totalClaimsAmount" class="text-4xl font-bold text-gray-900 dark:text-gray-300 mt-3"></p>
+        </div>
+        <div class="w-16 h-16 flex-shrink-0 bg-purple-500 text-white rounded-full flex items-center justify-center z-10">
+            <i class="fas fa-dollar-sign fa-3x"></i>
+        </div>
+    </div>
+
+    <!-- Widget 6: Average Policy Amount -->
+    <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-8 col-span-2 flex items-center justify-between relative overflow-hidden">
+        <div class="absolute -top-[30%] -left-[15%] bg-gradient-to-r from-gray-200 dark:from-blue-600 to-transparent h-[150%] w-1/2 rotate-45"></div>
+        <div class="absolute -bottom-[50%] -right-[12%] bg-gradient-to-r from-gray-100 via=transparent dark:from-blue-600 to-transparent h-[150%] w-[30%] rotate-[-70deg]"></div>
+        <div class="ml-4 z-10">
+            <h2 class="text-3xl font-bold text-gray-900 dark:text-white">Average Policy Amount</h2>
+            <p id="averagePolicyAmount" class="text-4xl font-bold text-gray-900 dark:text-gray-300 mt-3"></p>
+        </div>
+        <div class="w-16 h-16 flex-shrink-0 bg-orange-500 text-white rounded-full flex items-center justify-center z-10">
+            <i class="fas fa-chart-line fa-3x"></i>
+        </div>
+    </div>
+</div>
+
+<!-- Grid layout for tables and charts -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
+  
+
+    <!-- Table: Recent Policy Requests -->
+    <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-4 col-span-2">
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Recent Policy Requests</h2>
+        <table class="min-w-full mt-4 divide-y divide-gray-200">
+            <thead class="bg-gray-50 dark:bg-gray-700">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Policy Name</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Request Date</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
+                @foreach (var request in Model.RecentPolicyRequests)
+                {
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">@request.PolicyName</td>
+                        <td class="py-2 px-4">
+                            @if (request.Status == "Pending")
+                            {
+                                <span class="bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300 px-2 py-1 rounded-full text-xs font-medium">Pending</span>
+                            }
+                            else if (request.Status == "Approved")
+                            {
+                                <span class="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300 px-2 py-1 rounded-full text-xs font-medium">Approved</span>
+                            }
+                            else if (request.Status == "Rejected")
+                            {
+                                <span class="bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300 px-2 py-1 rounded-full text-xs font-medium">Rejected</span>
+                            }
+                            else
+                            {
+                                <span class="bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300 px-2 py-1 rounded-full text-xs font-medium">Unknown</span>
+                            }
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">@request.RequestDate.ToString("MM/dd/yyyy")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Chart: Policy Request Statuses (Doughnut Chart) -->
+    <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-4">
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Policy Request Statuses</h2>
+        <canvas id="policyRequestStatusesChart" class="mt-4"></canvas>
+    </div>
+        <!-- Table: Employees Information -->
+    <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-4 col-span-1">
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Employees Information</h2>
+        <table class="min-w-full mt-4 divide-y divide-gray-200">
+            <thead class="bg-gray-50 dark:bg-gray-700">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Employee Name</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Designation</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
+                @foreach (var employee in Model.Employees)
+                {
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">@employee.EmployeeName</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">@employee.Designation</td>
+
+                        </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <!-- Chart: Total Policies by Company -->
+    <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-4 col-span-2">
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Total Policies by Company</h2>
+        <canvas id="totalPoliciesByCompanyChart" class="mt-4"></canvas>
+    </div>
+
+    <!-- Chart: Total Policy Amounts by Policy Name (Line Chart) -->
+    <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-4 col-span-3">
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Total Policy Amounts by Policy Name</h2>
+        <canvas id="totalPolicyAmountsChart" class="mt-4"></canvas>
+    </div>
+
+    
+</div>
+
+@section Scripts {
+    <!-- Include Validation Scripts -->
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Function to animate numbers
+            function animateNumber(elementId, targetNumber) {
+                let element = document.getElementById(elementId);
+                let currentNumber = 0;
+                let increment = targetNumber / 100;
+                let interval = setInterval(function () {
+                    if (currentNumber < targetNumber) {
+                        currentNumber += increment;
+                        element.textContent = Math.ceil(currentNumber);
+                    } else {
+                        element.textContent = targetNumber;
+                        clearInterval(interval);
+                    }
+                }, 10);
+            }
+
+            // Get data from the model
+            let totalPolicies = @Model.TotalPolicies;
+            let claimsOverview = @Model.ClaimsOverview;
+            let activePolicies = @Model.ActivePolicies;
+            let pendingApprovals = @Model.PendingApprovals;
+            let totalClaimsAmount = @Model.TotalClaimsAmount; // New property for total claims amount
+            let averagePolicyAmount = @Model.AveragePolicyAmount; // New property for average policy amount
+
+            // Initialize animations
+            animateNumber('totalPolicies', totalPolicies);
+            animateNumber('claimsOverview', claimsOverview);
+            animateNumber('activePolicies', activePolicies);
+            animateNumber('pendingApprovals', pendingApprovals);
+            animateNumber('totalClaimsAmount', totalClaimsAmount); // Animation for total claims amount
+            animateNumber('averagePolicyAmount', averagePolicyAmount); // Animation for average policy amount
+
+            // Chart.js setup
+            const totalPoliciesByCompanyCtx = document.getElementById('totalPoliciesByCompanyChart').getContext('2d');
+            const totalPoliciesByCompanyChart = new Chart(totalPoliciesByCompanyCtx, {
+                type: 'bar',
+                data: {
+                    labels: @Html.Raw(Json.Serialize(Model.CompanyLabels)),
+                    datasets: [{
+                        label: 'Total Policies',
+                        data: @Html.Raw(Json.Serialize(Model.CompanyData)),
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            const totalPolicyAmountsCtx = document.getElementById('totalPolicyAmountsChart').getContext('2d');
+            const totalPolicyAmountsChart = new Chart(totalPolicyAmountsCtx, {
+                type: 'line',
+                data: {
+                    labels: @Html.Raw(Json.Serialize(Model.PolicyNames)),
+                    datasets: [{
+                        label: 'Policy Amounts',
+                        data: @Html.Raw(Json.Serialize(Model.PolicyAmounts)),
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        fill: true,
+                        tension: 0.1
+                    }]
+                }
+            });
+
+            const policyRequestStatusesCtx = document.getElementById('policyRequestStatusesChart').getContext('2d');
+            const policyRequestStatusesChart = new Chart(policyRequestStatusesCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: @Html.Raw(Json.Serialize(Model.PolicyRequestStatuses)),
+                    datasets: [{
+                        label: 'Request Statuses',
+                        data: @Html.Raw(Json.Serialize(Model.PolicyRequestCounts)),
+                        backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(255, 159, 64, 0.2)', 'rgba(75, 192, 192, 0.2)'],
+                        borderColor: ['rgba(255, 99, 132, 1)', 'rgba(255, 159, 64, 1)', 'rgba(75, 192, 192, 1)'],
+                        borderWidth: 1
+                    }]
+                }
+            });
+
+        });
+    </script>
+}

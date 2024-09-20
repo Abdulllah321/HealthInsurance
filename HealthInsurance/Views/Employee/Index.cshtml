@@ -1,0 +1,223 @@
+﻿@model HealthInsurance.Controllers.EmployeeDashboardViewModel
+
+@{
+        ViewData["Title"] = "Dashboard";
+}
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
+    <!-- Widget 1: Employee Name -->
+    <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-4 flex items-center">
+        <div class="w-12 h-12 flex-shrink-0 bg-blue-500 text-white rounded-full flex items-center justify-center">
+            <i class="fas fa-user fa-2x"></i>
+        </div>
+        <div class="ml-4">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Welcome, @Model.EmployeeDetails.FirstName</h2>
+            <p class="text-lg text-gray-700 dark:text-gray-300">@Model.EmployeeDetails.Designation</p>
+        </div>
+    </div>
+
+    <!-- Widget 2: Salary -->
+    <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-4 flex items-center">
+        <div class="w-12 h-12 flex-shrink-0 bg-green-500 text-white rounded-full flex items-center justify-center">
+            <i class="fas fa-dollar-sign fa-2x"></i>
+        </div>
+        <div class="ml-4">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Salary</h2>
+            <p class="text-3xl font-bold text-gray-900 dark:text-gray-300 mt-2">@Model.EmployeeDetails.Salary.ToString("C")</p>
+        </div>
+    </div>
+
+    <!-- Widget 3: Join Date -->
+    <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-4 flex items-center">
+        <div class="w-12 h-12 flex-shrink-0 bg-yellow-500 text-white rounded-full flex items-center justify-center">
+            <i class="fas fa-calendar-alt fa-2x"></i>
+        </div>
+        <div class="ml-4">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Join Date</h2>
+            <p class="text-3xl font-bold text-gray-900 dark:text-gray-300 mt-2">@Model.EmployeeDetails.JoinDate.ToString("MM/dd/yyyy")</p>
+        </div>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
+
+      
+    <!-- Recent Policies Section -->
+    <div class="col-span-2 space-y-6">
+    <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-4 col-span-2 h-max">
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Your Policies</h2>
+        <table class="max-w-full mt-4 divide-y divide-gray-200 w-full">
+            <thead class="bg-gray-50 dark:bg-gray-700">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Policy Name</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Description</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Amount</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">EMI</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
+                @foreach (var policy in Model.Policies)
+                {
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">@policy.PolicyName</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">@policy.PolicyDesc</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">@policy.PolicyAmount.ToString("C")</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">@policy.EMI.ToString("C")</td>
+                    </tr>
+                }
+                @if (!Model.Policies.Any())
+                {
+                    <tr>
+                        <td colspan="4" class="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-300">No policies found.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    </div>
+    <div class="col-span-1 space-y-6">
+    <!-- Button to create new policy request -->
+    <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-4">
+            <a href="@Url.Action("Create","EmployeePolicyRequest")" class="w-full inline-flex items-center justify-center px-4 py-2 bg-blue-700 text-white rounded-lg hover:bg-blue-800">
+            Create New Policy Request
+        </a>
+    </div>
+
+    <!-- Policy Requests Section -->
+    <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-4 h-max">
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Your Policy Requests</h2>
+        <table class="max-w-full mt-4 divide-y divide-gray-200 w-full relative">
+            <thead class="bg-gray-50 dark:bg-gray-700">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Policy Name</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700 relative">
+                @foreach (var request in Model.PolicyRequests)
+                {
+                    <tr class="relative w-full">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">@request.PolicyName</td>
+                        <td class="py-2 px-4">
+                            @if (request.Status == "Pending")
+                            {
+                                <span class="bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300 px-2 py-1 rounded-full text-xs font-medium">Pending</span>
+                            }
+                            else if (request.Status == "Approved")
+                            {
+                                <span class="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300 px-2 py-1 rounded-full text-xs font-medium">Approved</span>
+                            }
+                            else if (request.Status == "Rejected")
+                            {
+                                <span class="bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300 px-2 py-1 rounded-full text-xs font-medium">Rejected</span>
+                            }
+                            else
+                            {
+                                <span class="bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300 px-2 py-1 rounded-full text-xs font-medium">Unknown</span>
+                            }
+                        </td>
+                        <td class="p-2 absolute right-0 top-1/2 -translate-y-1/2">
+                            <!-- Three dots icon (Vertical Ellipsis) -->
+                            <button id="toggleButton-@request.RequestId" type="button" class="text-gray-500 relative dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 w-10" onclick="toggleDropdown('dropdown-@request.RequestId')">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+
+                            <!-- Dropdown menu -->
+                            <div id="dropdown-@request.RequestId" class="transition-all duration-300 absolute right-0 mt-2 top-3/4 w-40 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg z-10 opacity-0 hidden text-left overflow-hidden" onclick="event.stopPropagation();">
+                                    <a href="@Url.Action("details","EmployeePolicyRequest", new { id = request.RequestId })" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600">Details</a>
+                                    <a href="@Url.Action("Edit","EmployeePolicyRequest", new { id = request.RequestId })" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600">Edit</a>
+                                    <a href="@Url.Action("Delete","EmployeePolicyRequest", new { id = request.RequestId })" class="block px-4 py-2 text-sm text-red-500 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-600 hover:text-white">Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+
+                @if (!Model.PolicyRequests.Any())
+                {
+                    <tr>
+                        <td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-300">No requests found.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-4 col-span-2">
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Policy Request Status</h2>
+        <canvas id="statusChart"></canvas>
+    </div>
+    </div>
+ 
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");};
+    <script>
+        function toggleDropdown(id) {
+            const dropdown = document.getElementById(id);
+            const isDropdownVisible = !dropdown.classList.contains('hidden');
+
+            // Show the clicked dropdown if it was not already visible
+            if (!isDropdownVisible) {
+                dropdown.classList.remove('hidden');
+                setTimeout(() => {
+                    dropdown.classList.remove('opacity-0');
+                }, 100);
+            }
+        }
+
+        // Optional: Close the dropdown if clicking outside
+        document.addEventListener('click', function (event) {
+            if (!event.target.closest('[id^="toggleButton"]') && !event.target.closest('[id^="dropdown-"]')) {
+                document.querySelectorAll('[id^="dropdown-"]').forEach(dropdown => {
+                    dropdown.classList.add('opacity-0');
+                    setTimeout(() => {
+                        dropdown.classList.add('hidden');
+                    }, 300)
+                });
+            }
+        });
+    </script>
+    <script>
+               const statusCounts = {
+            Pending: @Model.PolicyRequests.Count(pr => pr.Status == "Pending"),
+            Approved: @Model.PolicyRequests.Count(pr => pr.Status == "Approved"),
+            Rejected: @Model.PolicyRequests.Count(pr => pr.Status == "Rejected"),
+        };
+
+        const statusChartCtx = document.getElementById('statusChart').getContext('2d');
+        const statusChart = new Chart(statusChartCtx, {
+            type: 'doughnut', // Change to 'doughnut' for a rounded donut chart
+            data: {
+                labels: Object.keys(statusCounts),
+                datasets: [{
+                    label: 'Number of Requests',
+                    data: Object.values(statusCounts),
+                    backgroundColor: [
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(255, 99, 132, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(255, 99, 132, 1)'
+                    ],
+                    borderWidth: 1,
+                    hoverOffset: 4 // Optional: adds some offset on hover for better interaction
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Policy Request Status'
+                    }
+                }
+            }
+        });
+    </script>
+}

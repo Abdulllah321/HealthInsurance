@@ -1,4 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@using System.Security.Claims
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -15,27 +17,22 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Baskervville+SC:wght@400;700&family=Raleway:wght@400;600;900&display=swap" rel="stylesheet" />
     <script>
-    tailwind.config = {
-     theme: {
-    extend: {
-      screens: {
-        'dark': {'raw': '(prefers-color-scheme: dark)'},
-      }
-    }
-  }
-  }
-  </script>
-    <script>
-        // Auto-enable dark mode based on user preference
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // On page load or when changing themes, best to add inline in `head` to avoid FOUC
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark')
         }
     </script>
+
+     <script>
+    tailwind.config = {
+            darkMode: 'class',
+    }
+  </script>
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-200 transition-colors duration-300" style="font-family: 'Raleway', sans-serif;">
-    <div id="loading-overlay" class="fixed inset-0 bg-white dark:bg-gray-800 bg-opacity-75 dark:bg-opacity-75 flex items-center justify-center z-50 hidden">
-        <div class="w-16 h-16 border-4 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
-    </div>
+ 
 @if (Context.User.Identity.Name != null)
 {
     <nav class="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
@@ -51,47 +48,59 @@
                     <a class="text-3xl font-extrabold tracking-wide text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-600" style="font-family: 'Baskervville SC', serif;" asp-area="" asp-controller="Home" asp-action="Index">HealthInsurance</a>
                 </div>
                 <div class="flex items-center">
-                    <div class="flex items-center ms-3">
+                    <button id="theme-toggle" type="button" class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5">
+                        <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                        <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                    </button>
+                    <div class="flex items-center ms-3 relative">
+                          
                         <div>
-                            <button type="button" class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" aria-expanded="false" data-dropdown-toggle="dropdown-user">
+                            <button type="button" class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" aria-expanded="false" data-dropdown-toggle="dropdown-user" id="dropdown-user-button">
                                 <span class="sr-only">Open user menu</span>
                                 <img class="w-8 h-8 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="user photo">
                             </button>
                         </div>
-                        <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600" id="dropdown-user">
+                        <div class="hidden z-50 my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600 absolute top-full right-0" id="dropdown-user">
                             <div class="px-4 py-3" role="none">
-                                <p class="text-sm text-gray-900 dark:text-white" role="none">
-                                    @Context.User.Identity.Name
-                                </p>
+                                    <p class="text-sm text-gray-900 dark:text-white" role="none">
+                                        @Context.User.Identity.Name
+                                    </p>
                             </div>
-                            <ul class="py-1" role="none">
-                                <li>
-                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Dashboard</a>
-                                </li>
-                                <li>
-                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Settings</a>
-                                </li>
-                                <li>
-                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Sign out</a>
-                                </li>
-                            </ul>
+                         <ul class="py-1" role="none">
+                              @if (User.IsInRole("Admin"))
+                    {
+                            <li>
+                                <a href="@Url.Action("Index", "Admin")" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Dashboard</a>
+                                        </li>
+                                    } else
+                                    {
+                                        <li>
+                                            <a href="@Url.Action("Index", "Employee")" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Dashboard</a>
+                                        </li>
+                                    }
+                                    <li>
+                                <a href="@Url.Action("Logout", "Auth")" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Sign out</a>
+                            </li>
+                        </ul>
+
                         </div>
                     </div>
                 </div>
-            </div>
+                </div>
+
         </div>
     </nav>
+        @if (User.IsInRole("Admin"))
+        {
         <aside id="logo-sidebar" class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700" aria-label="Sidebar">
             <div class="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800 rounded-tr-lg rounded-br-lg">
                 <ul class="space-y-2 font-medium">
-                   
-                    @if (User.IsInRole("Admin"))
-                    {
+                  
                         <!-- Dashboard -->
                         <li>
                             <a href="/admin" class="flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group transition-colors duration-300
-        @(ViewContext.RouteData.Values["controller"].ToString() == "Admin" ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:!text-white" : "text-gray-600 dark:!text-gray-100")">
-                                <i class="fas fa-tachometer-alt mr-3 text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200"></i>
+        @(ViewContext.RouteData.Values["controller"].ToString() == "Admin" ? "bg-gray-100 dark:bg-gray-700 !text-gray-900 dark:!text-white" : "!text-gray-600 dark:!text-gray-100")">
+                                <i class="fas fa-tachometer-alt mr-3 text-gray-700 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200"></i>
                                 <span class="text-lg font-semibold">Dashboard</span>
                             </a>
                         </li>
@@ -99,8 +108,8 @@
                         <!-- Companies -->
                         <li>
                             <a href="/admin/companies" class="flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group transition-colors duration-300
-        @(ViewContext.RouteData.Values["controller"].ToString() == "Companies" ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:!text-white" : "text-gray-600 dark:!text-gray-100")">
-                                <i class="fas fa-building mr-3 text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200"></i>
+        @(ViewContext.RouteData.Values["controller"].ToString() == "Companies" ? "bg-gray-100 dark:bg-gray-700 !text-gray-900 dark:!text-white" : "!text-gray-600 dark:!text-gray-100")">
+                                <i class="fas fa-building mr-3 text-gray-700 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200"></i>
                                 <span class="text-lg font-semibold">Companies</span>
                             </a>
                         </li>
@@ -108,8 +117,8 @@
                         <!-- Hospitals -->
                         <li>
                             <a href="/admin/hospital" class="flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group transition-colors duration-300
-        @(ViewContext.RouteData.Values["controller"].ToString() == "Hospital" ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:!text-white" : "text-gray-600 dark:!text-gray-100")">
-                                <i class="fas fa-hospital mr-3 text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200"></i>
+        @(ViewContext.RouteData.Values["controller"].ToString() == "Hospital" ? "bg-gray-100 dark:bg-gray-700 !text-gray-900 dark:!text-white" : "!text-gray-600 dark:!text-gray-100")">
+                                <i class="fas fa-hospital mr-3 text-gray-700 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200"></i>
                                 <span class="text-lg font-semibold">Hospitals</span>
                             </a>
                         </li>
@@ -117,8 +126,8 @@
                         <!-- Policies -->
                         <li>
                             <a href="/admin/policies" class="flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group transition-colors duration-300
-        @(ViewContext.RouteData.Values["controller"].ToString() == "Policies" ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:!text-white" : "text-gray-600 dark:!text-gray-100")">
-                                <i class="fas fa-file-alt mr-3 text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200"></i>
+        @(ViewContext.RouteData.Values["controller"].ToString() == "Policies" ? "bg-gray-100 dark:bg-gray-700 !text-gray-900 dark:!text-white" : "!text-gray-600 dark:!text-gray-100")">
+                                <i class="fas fa-file-alt mr-3 text-gray-700 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200"></i>
                                 <span class="text-lg font-semibold">Policies</span>
                             </a>
                         </li>
@@ -126,8 +135,8 @@
                         <!-- Employees -->
                         <li>
                             <a href="/admin/employees" class="flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group transition-colors duration-300
-        @(ViewContext.RouteData.Values["controller"].ToString() == "Employees" ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:!text-white" : "text-gray-600 dark:!text-gray-100")">
-                                <i class="fas fa-users mr-3 text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200"></i>
+        @(ViewContext.RouteData.Values["controller"].ToString() == "Employees" ? "bg-gray-100 dark:bg-gray-700 !text-gray-900 dark:!text-white" : "!text-gray-600 dark:!text-gray-100")">
+                                <i class="fas fa-users mr-3 text-gray-700 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200"></i>
                                 <span class="text-lg font-semibold">Employees</span>
                             </a>
                         </li>
@@ -135,8 +144,8 @@
                         <!-- Policies on Employees -->
                         <li>
                             <a href="/admin/policiesonemployees" class="flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group transition-colors duration-300
-        @(ViewContext.RouteData.Values["controller"].ToString() == "PoliciesOnEmployees" ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:!text-white" : "text-gray-600 dark:!text-gray-100")">
-                                <i class="fas fa-file-contract mr-3 text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200"></i>
+        @(ViewContext.RouteData.Values["controller"].ToString() == "PoliciesOnEmployees" ? "bg-gray-100 dark:bg-gray-700 !text-gray-900 dark:!text-white" : "!text-gray-600 dark:!text-gray-100")">
+                                <i class="fas fa-file-contract mr-3 text-gray-700 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200"></i>
                                 <span class="text-lg font-semibold">Policies on Employees</span>
                             </a>
                         </li>
@@ -144,8 +153,8 @@
                         <!-- Policy Requests -->
                         <li>
                             <a href="/admin/policyrequest" class="flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group transition-colors duration-300
-@(ViewContext.RouteData.Values["controller"].ToString() == "PolicyRequest" ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:!text-white" : "text-gray-600 dark:!text-gray-100")">
-                                <i class="fas fa-clipboard-list mr-3 text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200"></i>
+@(ViewContext.RouteData.Values["controller"].ToString() == "PolicyRequest" ? "bg-gray-100 dark:bg-gray-700 !text-gray-900 dark:!text-white" : "!text-gray-600 dark:!text-gray-100")">
+                                <i class="fas fa-clipboard-list mr-3 text-gray-700 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200"></i>
                                 <span class="text-lg font-semibold">Policy Requests</span>
                             </a>
                         </li>
@@ -153,46 +162,31 @@
                         <!-- Policy Approvals -->
                         <li>
                             <a href="/admin/policyapproval" class="flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group transition-colors duration-300
-@(ViewContext.RouteData.Values["controller"].ToString() == "PolicyApproval" ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:!text-white" : "text-gray-600 dark:!text-gray-100")">
-                                <i class="fas fa-check-circle mr-3 text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200"></i>
+@(ViewContext.RouteData.Values["controller"].ToString() == "PolicyApproval" ? "bg-gray-100 dark:bg-gray-700 !text-gray-900 dark:!text-white" : "!text-gray-600 dark:!text-gray-100")">
+                                <i class="fas fa-check-circle mr-3 text-gray-700 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200"></i>
                                 <span class="text-lg font-semibold">Policy Approvals</span>
                             </a>
                         </li>
-
-
-                        <!-- Settings -->
-                        <li>
-                            <a href="/admin/settings" class="flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group transition-colors duration-300
-        @(ViewContext.RouteData.Values["controller"].ToString() == "Settings" ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:!text-white" : "text-gray-600 dark:!text-gray-100")">
-                                <i class="fas fa-cogs mr-3 text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200"></i>
-                                <span class="text-lg font-semibold">Settings</span>
-                            </a>
-                        </li>
-@* 
-                         <!-- Help -->
-                         <li>
-                             <a href="/admin/help" class="flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group transition-colors duration-300
-         @(ViewContext.RouteData.Values["controller"].ToString() == "Help" ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:!text-white" : "text-gray-600 dark:!text-gray-100")">
-                                 <i class="fas fa-question-circle mr-3 text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200"></i>
-                                 <span class="text-lg font-semibold">Help</span>
-                             </a>
-                         </li> *@
-
-                    }
-                    @if (User.IsInRole("Employee"))
-                    {
-                        <!-- Additional Employee Sidebar Items -->
-                    }
                 </ul>
             </div>
         </aside>
-
-     
+        }
+        @if (User.IsInRole("Admin"))
+        {
         <div class="p-4 sm:ml-64">
             <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14">
                 @RenderBody()
             </div>
-        </div>
+        </div>}
+        @if (User.IsInRole("Employee"))
+        {
+                    <div class="p-4 ">
+
+            <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14">
+                @RenderBody()
+            </div>
+            </div>
+        }
 
 }
 else
@@ -244,12 +238,6 @@ else
     </footer>
 }
 
-<script>
-    document.getElementById('menu-toggle').addEventListener('click', function () {
-        document.getElementById('menu').classList.toggle('hidden');
-    });
-</script>
-
 
 <style>
     .active-nav {
@@ -259,25 +247,9 @@ else
     }
 </style>
  
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script src="~/js/site.js"></script>
 @RenderSection("Scripts", required: false)
-    @section Scripts {
-        <script>
-            // Show the loading screen on AJAX requests
-            document.addEventListener("DOMContentLoaded", function() {
-                document.addEventListener("ajaxStart", function() {
-                    document.getElementById('loading-overlay').classList.remove('hidden');
-                });
-
-                document.addEventListener("ajaxStop", function() {
-                    document.getElementById('loading-overlay').classList.add('hidden');
-                });
-
-                // For page load
-                window.addEventListener('load', function() {
-                    document.getElementById('loading-overlay').classList.add('hidden');
-                });
-            });
-        </script>
-    }
 </body>
 </html>

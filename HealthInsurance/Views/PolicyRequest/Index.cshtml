@@ -23,7 +23,7 @@
         @if (Model.PolicyRequests.Any())
         {
         <table class="min-w-full bg-white dark:bg-gray-800">
-            <thead class="bg-gray-600">
+                <thead class="bg-gray-600 text-white">
                 <tr>
                     <th class="py-2 px-4 border-b border-gray-300 dark:border-gray-700">Request Date</th>
                     <th class="py-2 px-4 border-b border-gray-300 dark:border-gray-700">Company</th>
@@ -45,7 +45,7 @@
                         <td class="py-2 px-4">@item.Policy.PolicyName</td>
                         <td class="py-2 px-4">@item.PolicyAmount</td>
                         <td class="py-2 px-4">@item.EMI</td>
-           <td class="py-2 px-4">
+                        <td class="py-2 px-4">
                                 @if (item.Status == "Pending")
                                 {
                                     <span class="bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300 px-2 py-1 rounded-full text-xs font-medium">Pending</span>
@@ -62,7 +62,8 @@
                                 {
                                     <span class="bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300 px-2 py-1 rounded-full text-xs font-medium">Unknown</span>
                                 }
-                        </td>                        <td class="py-2 px-4 text-right">
+                        </td> 
+                        <td class="py-2 px-4 text-right">
                             <!-- Three dots icon (Vertical Ellipsis) -->
                             <button id="toggleButton-@item.RequestId" type="button" class="text-gray-500 relative dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 w-10" onclick="toggleDropdown('dropdown-@item.RequestId')">
                                 <i class="fas fa-ellipsis-v"></i>

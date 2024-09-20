@@ -28,7 +28,7 @@ namespace HealthInsurance.Controllers
         public IActionResult Logout()
         {
             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Index");
+            return Redirect("/");
         }
 
         [Authorize(Roles = "Admin")]
@@ -49,7 +49,15 @@ namespace HealthInsurance.Controllers
         [Authorize(Roles = "Employee")]
         public IActionResult EmployeeDashboard()
         {
-            return View(); 
+            // Check if the user is in the Admin role
+            if (User.IsInRole("Employee"))
+            {
+                // Redirect to /admin if the user is an Admin
+                return Redirect("/Employee");
+            }
+
+            // Optionally return a 404 page if not authorized
+            return NotFound();
         }
 
         [Authorize]
@@ -97,45 +105,6 @@ namespace HealthInsurance.Controllers
         public IActionResult EmpRegistration()
         {
             return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> EmpRegistration(EmpRegistrationViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var employee = new EmpRegister
-                {
-                    Designation = model.Designation,
-                    JoinDate = model.JoinDate,
-                    Salary = model.Salary,
-                    FirstName = model.FirstName,
-                    LastName = model.LastName,
-                    Username = model.Username,
-                    Password = model.Password,
-                    Address = model.Address,
-                    ContactNo = model.ContactNo,
-                    State = model.State,
-                    Country = model.Country,
-                    City = model.City,
-                    PolicyStatus = model.PolicyStatus,
-                };
-
-                try
-                {
-                    _context.Employees.Add(employee);
-                    await _context.SaveChangesAsync();
-
-                    ModelState.Clear();
-                    ViewBag.Message = $"{employee.FirstName} {employee.LastName} registered successfully.";
-                }
-                catch (DbUpdateException)
-                {
-                    ModelState.AddModelError("", "An error occurred while registering. Please ensure the username is unique.");
-                    return View(model);
-                }
-            }
-            return View(model);
         }
 
         // Admin Login

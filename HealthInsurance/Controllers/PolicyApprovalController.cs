@@ -103,16 +103,27 @@ namespace HealthInsurance.Controllers
 
         // GET: admin/PolicyApproval/Create
         [HttpGet("Create")]
-        public IActionResult Create(int requestId, bool isApproved)
+        public async Task<IActionResult> Create(int requestId, bool isApproved)
         {
-            ViewData["PolicyId"] = new SelectList(_context.Policies, "PolicyId", "PolicyName");
-            ViewData["RequestId"] = requestId;
+            // Fetch all policies for dropdown
+            ViewData["PolicyId"] = new SelectList(await _context.Policies.ToListAsync(), "PolicyId", "PolicyName");
+
+            // Get all available request IDs
+            var existingRequestIds = _context.PolicyApprovals.Select(pa => pa.RequestId);
+            var availableRequests = await _context.PolicyRequests
+                .Where(pr => !existingRequestIds.Contains(pr.RequestId))
+                .ToListAsync();
+
+            ViewData["RequestId"] = new SelectList(_context.PolicyRequests, "RequestId", "RequestId", availableRequests);
+
+            // Pass the isApproved value as part of ViewData
             ViewData["IsApproved"] = isApproved;
 
-    return View();
+            return View();
         }
 
-      
+
+
         [HttpPost("Create")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,PolicyId,Date,Amount,Approved,Reason,RequestId")] PolicyApprovalDetailsDto policyApprovalDetails)
@@ -138,18 +149,21 @@ namespace HealthInsurance.Controllers
                 catch (Exception ex)
                 {
                     // Log the exception (if you have a logging mechanism)
-                    // Example: _logger.LogError(ex, "Error creating PolicyApprovalDetails");
-
-                    // Add a model error to display in the view
                     ModelState.AddModelError("", "An error occurred while creating the policy approval. Please try again.");
                 }
             }
-
             ViewData["PolicyId"] = new SelectList(_context.Policies, "PolicyId", "PolicyName", policyApprovalDetails.PolicyId);
-            // Ensure that RequestId is correctly set in the view data
-            ViewData["RequestId"] = policyApprovalDetails.RequestId;
+
+            // Fetch RequestIds that are not in PolicyApprovals
+            var existingRequestIds = _context.PolicyApprovals.Select(pa => pa.RequestId);
+            var availableRequests = await _context.PolicyRequests
+                .Where(pr => !existingRequestIds.Contains(pr.RequestId))
+                .ToListAsync();
+
+            ViewData["RequestId"] = new SelectList(_context.PolicyRequests, "RequestId", "RequestId", availableRequests);
             return View(policyApprovalDetails);
         }
+
 
 
         // GET: admin/PolicyApproval/Edit/5
@@ -167,7 +181,7 @@ namespace HealthInsurance.Controllers
                 return NotFound();
             }
             ViewData["PolicyId"] = new SelectList(_context.Policies, "PolicyId", "PolicyName", policyApprovalDetails.PolicyId);
-            ViewData["RequestId"] = policyApprovalDetails.RequestId;
+            ViewData["RequestId"] = new SelectList(_context.PolicyRequests, "RequestId", "RequestId", policyApprovalDetails.RequestId);
             return View(policyApprovalDetails);
         }
 
@@ -201,9 +215,7 @@ namespace HealthInsurance.Controllers
                     existingApprovalDetail.Approved = policyApprovalDetailsDto.Approved;
                     existingApprovalDetail.Reason = policyApprovalDetailsDto.Reason;
 
-                    // Mark the entity as modified
-                    _context.Entry(existingApprovalDetail).State = EntityState.Modified;
-
+                    _context.PolicyApprovals.Update(existingApprovalDetail);
                     // Save changes
                     await _context.SaveChangesAsync();
                 }
